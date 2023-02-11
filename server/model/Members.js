@@ -9,9 +9,10 @@ const memberSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    facebook: {type: String },
-    twitter: {type: String },
-    instagram: {type: String },
+    isDeleted: { type: Boolean, default: false },
+    facebook: { type: String },
+    twitter: { type: String },
+    instagram: { type: String },
     fullname: {
       type: String,
       required: true,
@@ -27,7 +28,6 @@ const memberSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
 
 const Members = mongoose.model("Member", memberSchema);
 export default Members;

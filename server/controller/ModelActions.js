@@ -1,14 +1,14 @@
 class ModelActions {
   findAll = async (obj) => {
-    const args = await obj.find({});
+    const args = await obj.find({ isDeleted: false });
     return args;
   };
   findId = async (obj, id) => {
-    const arg = await obj.findById(id);
+    const arg = await obj.findOne({ id: id, isDeleted: false });
     return arg;
   };
   findOne = async (obj, getter) => {
-    const arg = await obj.findOne(getter);
+    const arg = await obj.findOne({ ...getter, isDeleted: false });
     return arg;
   };
 
@@ -17,7 +17,16 @@ class ModelActions {
     return created;
   };
   deletor = async (obj, id) => {
-    const deleted = await obj.findByIdAndDelete(id);
+    // const deleted = await obj.findByIdAndDelete(id);
+    // return deleted;
+    const deleted = await obj.findByIdAndUpdate(
+      id,
+      { $set: { isDeleted: true } },
+      payload,
+      {
+        new: true,
+      }
+    );
     return deleted;
   };
   updator = async (obj, id, payload) => {

@@ -28,7 +28,7 @@ class ServiceRepo {
     if (!match) {
       throw new CustomError.NotFoundRequestError(`No service with id : ${id}`);
     }
-    const updated = await ModelActions.updator(About, id, req.body);
+    const updated = await ModelActions.updator(Services, id, req.body);
     updated && res.status(StatusCodes.OK).json({ updated });
   });
 
@@ -39,7 +39,7 @@ class ServiceRepo {
     if (!match) {
       throw new CustomError.NotFoundRequestError(`No service with id : ${id}`);
     }
-    const deleted = await ModelActions.deletor(About, id);
+    const deleted = await ModelActions.deletor(Services, id);
     deleted && res.status(StatusCodes.OK).json({ message: "service deleted" });
   });
 

@@ -3,25 +3,10 @@ import Mongoose from "mongoose";
 // TODO: define a static function to update status if date exceed
 const postSchema = new Mongoose.Schema(
   {
-    userId: {
-      type: Mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
     image: { type: String },
     benefit: { graduate: String, underGraduate: String, postGraduate: String },
-    title: {
-      type: Mongoose.Schema.Types.ObjectId,
-      ref: "Type",
-      required: true,
-    },
-    status: {
-      type: String,
-      enum: ["open", "close"],
-      default: "open",
-    },
     body: { type: String, required: true },
-    amount: {
+    categoryId: {
       type: Mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: true,
@@ -31,6 +16,7 @@ const postSchema = new Mongoose.Schema(
       underGraduate: String,
       postGraduate: String,
     },
+    isDeleted: { type: Boolean, default: false },
     eligible_country: { type: Array, default: [], required: true },
     country: { type: String, required: true },
     host: { type: String, required: true },

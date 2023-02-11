@@ -17,7 +17,7 @@ class PartnerRepo {
   deletePartner = asyncHandler(async (req, res) => {
     const { id } = req.params;
     checkId(id);
-    const match = await ModelActions.findOne(About, { _id: id });
+    const match = await ModelActions.findOne(Partner, { _id: id });
     if (!match) {
       throw new CustomError.NotFoundRequestError(`No partner with id : ${id}`);
     }

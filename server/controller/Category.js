@@ -27,7 +27,7 @@ class CategoryRepo {
     if (!match) {
       throw new CustomError.NotFoundRequestError(`No Category with id : ${id}`);
     }
-    const updated = await ModelActions.updator(About, id, req.body);
+    const updated = await ModelActions.updator(Category, id, req.body);
     updated && res.status(StatusCodes.OK).json(updated);
   });
   deleteCategory = asyncHandler(async (req, res) => {
@@ -37,7 +37,7 @@ class CategoryRepo {
     if (!match) {
       throw new CustomError.NotFoundRequestError(`No Category with id : ${id}`);
     }
-    const deleted = await ModelActions.deletor(About, id);
+    const deleted = await ModelActions.deletor(Category, id);
     deleted && res.status(StatusCodes.OK).json(deleted);
   });
   allCategory = asyncHandler(async (req, res) => {

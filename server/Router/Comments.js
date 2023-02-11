@@ -1,17 +1,33 @@
 import express from "express";
 import CommentRepo from "../controller/Comments.js";
-import { verifyTokenAndRoles } from "../middleware/authenticate.js";
+import AuthRoles from "../middleware/authroles.js";
 
 const router = express.Router();
 
 router
   .route("/")
-  .post(verifyTokenAndRoles, CommentRepo.createComment)
+  .post(
+    AuthRoles.Authenticate,
+    AuthRoles.authorizeStudentAdmin,
+    CommentRepo.createComment
+  )
   .get(CommentRepo.allComments);
 router
   .route("/:id")
-  .delete(verifyTokenAndRoles, CommentRepo.deleteComment)
-  .patch(verifyTokenAndRoles, CommentRepo.updateComment)
-  .get(verifyTokenAndRoles, CommentRepo.singleComment);
+  .delete(
+    AuthRoles.Authenticate,
+    AuthRoles.authorizeStudentAdmin,
+    CommentRepo.deleteComment
+  )
+  .patch(
+    AuthRoles.Authenticate,
+    AuthRoles.authorizeStudentAdmin,
+    CommentRepo.updateComment
+  )
+  .get(
+    AuthRoles.Authenticate,
+    AuthRoles.authorizeStudentAdmin,
+    CommentRepo.singleComment
+  );
 
 export default router;

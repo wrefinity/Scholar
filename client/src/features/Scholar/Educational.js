@@ -1,20 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { selectAllCategories } from "../../Slicer/Categories";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
+import PaymentOptions from "../PaymentOptions/PaymentOptions";
+import { validateEmpty } from "../../Utils/InputHelpers";
+import { toast } from "react-toastify";
 const Educational = ({
   scholar,
-  setScholar,
   handleInputImage,
   handleInput,
+  setScholar,
   FileInput,
   page,
   setPage,
   x,
   setX,
-  handleSubmit,
+  reset,
+  reseter,
 }) => {
+  const [submitted, setSubmitted] = useState(false);
   const categories = useSelector(selectAllCategories);
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
+
   const categoriesOption = !categories
     ? ""
     : Array.from(categories)
@@ -31,6 +39,13 @@ const Educational = ({
           );
         });
 
+  const handleSubmited = () => {
+    setFormErrors(validateEmpty(scholar));
+
+    if (validateEmpty(scholar))
+      if (Object.keys(formErrors).length === 0) setSubmitted(true);
+      else toast.error(`${formError.all}`, { autoClose: 2000 });
+  };
   return (
     <div className="mb-5 mt-5 pb-5">
       <Container className="mb-5 mt-5 pb-5">
@@ -53,7 +68,7 @@ const Educational = ({
                         <Form.Select
                           aria-label="Default select example"
                           name="scholarName"
-                          value={scholar.scholarName}
+                          value={scholar.scholarType}
                           onChange={(e) => handleInput(e, setScholar)}
                         >
                           <option>select scholarship </option>
@@ -72,7 +87,6 @@ const Educational = ({
                           onChange={(e) => handleInput(e, setScholar)}
                         >
                           <option>select scholarship level </option>
-                         
                         </Form.Select>
                       </Form.Group>
                     </Row>
@@ -144,7 +158,14 @@ const Educational = ({
                     >
                       Previous{" "}
                     </Button>
-                    <Button onClick={handleSubmit}>Submit </Button>
+                    <Button onClick={handleSubmited}>Submit </Button>
+                    {submitted && (
+                      <PaymentOptions
+                        scholarship={scholar}
+                        reset={reset}
+                        reseter={reseter}
+                      />
+                    )}
                   </div>
                 </div>
               </Card.Body>

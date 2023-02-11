@@ -28,7 +28,7 @@ class GalleryRepo {
     if (!match) {
       throw new CustomError.NotFoundRequestError(`No Gallery with id : ${id}`);
     }
-    const updated = await ModelActions.updator(About, id, req.body);
+    const updated = await ModelActions.updator(Gallery, id, req.body);
     updated && res.status(StatusCodes.OK).json(updated);
   });
 
@@ -39,7 +39,7 @@ class GalleryRepo {
     if (!match) {
       throw new CustomError.NotFoundRequestError(`No Gallery with id : ${id}`);
     }
-    const deleted = await ModelActions.deletor(About, id);
+    const deleted = await ModelActions.deletor(Gallery, id);
     deleted && res.status(StatusCodes.OK).json(deleted);
   });
 
@@ -52,9 +52,8 @@ class GalleryRepo {
     const { id } = req.params;
     checkId(id);
     const data = await ModelActions.findId(Gallery, id);
-    if (!data) {
+    if (!data)
       throw new CustomError.NotFoundRequestError(`No gallery with id : ${id}`);
-    }
     res.status(StatusCodes.OK).json(data);
   });
 }

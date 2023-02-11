@@ -19,6 +19,7 @@ import Gallery from "./Screen/Gallery/Gallery";
 import Member from "./Screen/Member/Member";
 import Services from "./Screen/Service/Services";
 import ScholarCategory from "./features/Scholar/ScholarCategory";
+import Category from "./Screen/Category/Category";
 const App = () => {
   return (
     <div>
@@ -37,6 +38,7 @@ const App = () => {
             <Route path="register" />
             <Route path="about-us" />
             <Route path="/contact_us" element={<Contact />} />
+            <Route path="/categories" element={<Category />} />
             <Route path="/gallery_admin" element={<Gallery />} />
             <Route path="/member_admin" element={<Member />} />
             <Route path="/service_admin" element={<Services />} />

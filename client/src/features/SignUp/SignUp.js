@@ -9,6 +9,8 @@ const SignUp = () => {
   const { status, message } = useSelector((state) => state.auth);
   const [signupData, setSignup] = useState({
     email: "",
+    fullname: "",
+    username: "",
     password: "",
     confirm_password: "",
   });
@@ -20,6 +22,8 @@ const SignUp = () => {
   const reset = () => {
     setSignup({
       email: "",
+      fullname: "",
+      username: "",
       password: "",
       confirm_password: "",
     });
@@ -39,17 +43,19 @@ const SignUp = () => {
   const dispatchSignup = () => {
     if (Object.keys(formErrors).length === 0 && isSubmit && status === "idle") {
       register(signupData);
+      setIsSubmit(false);
     }
 
     if (status === "succeeded") {
       toast.success("register success", { autoClose: 2000 });
       reset();
-      reseter();
+      dispatch(reseter());
+      setIsSubmit(false);
       navigate("/login");
     }
     if (status === "succeeded") {
       toast.error(message, { autoClose: 4000 });
-      reseter();
+      dispatch(reseter());
     }
   };
   referal.current = dispatchSignup;
@@ -69,6 +75,32 @@ const SignUp = () => {
                   </div>
                   <div className="mb-3">
                     <Form onSubmit={handleSignup}>
+                      <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label className="text-center">
+                          Fullname
+                        </Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="fullname"
+                          value={signupData.fullname}
+                          onChange={(e) => handleInput(e, setSignup)}
+                          placeholder="Enter username"
+                        />
+                      </Form.Group>
+                      <p className="text-danger">{formErrors?.fullname}</p>
+                      <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label className="text-center">
+                          Username
+                        </Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="username"
+                          value={signupData.username}
+                          onChange={(e) => handleInput(e, setSignup)}
+                          placeholder="Enter username"
+                        />
+                      </Form.Group>
+                      <p className="text-danger">{formErrors?.username}</p>
                       <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label className="text-center">
                           Email address

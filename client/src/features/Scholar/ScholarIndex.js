@@ -9,11 +9,15 @@ import {
   validateEmpty,
 } from "../../Utils/InputHelpers";
 import { FileInput } from "../../Utils/FileInput";
-import { createScholarsPost, reseter } from "../../Slicer/Post";
+import { selectAllScholarships, reseter } from "../../Slicer/ScholarApply";
+import { selectAllCategories } from "../../Slicer/Categories";
+import { useParams } from "react-router-dom";
 
 const ScholarIndex = () => {
   const [page, setPage] = useState(0);
   const [x, setX] = useState(0);
+  const { scholarId } = useParams();
+  const categories = useSelector(selectAllCategories);
   const [scholar, setScholar] = useState({
     postId: "",
     firstname: "",
@@ -22,6 +26,7 @@ const ScholarIndex = () => {
     email: "",
     city: "",
     state: "",
+    amount: "",
     zip: "",
     localGovt: "",
     country: "",
@@ -42,6 +47,7 @@ const ScholarIndex = () => {
       email: "",
       city: "",
       state: "",
+      amout: "",
       zip: "",
       localGovt: "",
       country: "",
@@ -55,18 +61,29 @@ const ScholarIndex = () => {
     });
   };
 
+  const scholarships = useSelector(selectAllScholarships);
+  const targetScholar = scholarships.filter(
+    (scholar) => scholar._id === scholarId
+  );
+
+  scholar.postId = targetScholar["_id"];
+
+  // set amount before checking for empty field;
+  scholar.amount =
+    categories &&
+    Array.from(categories).find((cat) => cat._id === targetScholar?.categoryId)[
+      "amount"
+    ];
+
   const dispatch = useDispatch();
   const referal = useRef();
   const { status, message } = useSelector((state) => state.posts);
 
-  const [formErrors, setFormErrors] = useState({});
-  const [isSubmit, setIsSubmit] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setFormErrors(validateEmpty(scholar));
-    setIsSubmit(true);
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   setFormErrors(validateEmpty(scholar));
+  //   setIsSubmit(true);
+  // };
 
   useEffect(() => {
     referal.current();
@@ -96,9 +113,8 @@ const ScholarIndex = () => {
   const componentList = [
     <Personal
       scholar={scholar}
-      handleInputImage={handleInputImage}
       handleInput={handleInput}
-      FileInput={FileInput}
+      setScholar={setScholar}
       page={page}
       setPage={setPage}
       x={x}
@@ -106,15 +122,16 @@ const ScholarIndex = () => {
     />,
     <Educational
       scholar={scholar}
-      setScholar={setScholar}
       handleInputImage={handleInputImage}
       handleInput={handleInput}
+      setScholar={setScholar}
       FileInput={FileInput}
       page={page}
       setPage={setPage}
       x={x}
       setX={setX}
-      handleSubmit={handleSubmit}
+      reset={reset}
+      reseter={reseter}
     />,
   ];
   return (

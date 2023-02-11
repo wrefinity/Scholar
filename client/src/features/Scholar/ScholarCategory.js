@@ -19,7 +19,7 @@ import {
 const ScholarCategory = () => {
   const [category, setCategory] = useState({
     name: "",
-    price: "",
+    amount: "",
     status: "",
   });
   const { status, message } = useSelector((state) => state.categories);
@@ -35,7 +35,7 @@ const ScholarCategory = () => {
   const reset = () => {
     setCategory({
       name: "",
-      price: "",
+      amount: "",
       status: "",
     });
   };
@@ -106,14 +106,14 @@ const ScholarCategory = () => {
                         className="mb-3"
                         controlId="exampleForm.ControlTextarea1"
                       >
-                        <Form.Label>Price</Form.Label>
+                        <Form.Label>Amount</Form.Label>
                         <Form.Control
-                          name="price"
-                          value={category.price}
+                          name="amount"
+                          value={category.amount}
                           onChange={(e) => handleInput(e, setCategory)}
                         />
                       </Form.Group>
-                      <p className="text-danger">{formErrors?.price}</p>
+                      <p className="text-danger">{formErrors?.amount}</p>
                       <Form.Group
                         className="mb-3"
                         controlId="exampleForm.ControlTextarea111"

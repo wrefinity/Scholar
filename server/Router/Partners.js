@@ -1,12 +1,22 @@
 import express from "express";
 import PartnerRepo from "../controller/Partners.js";
-import { verifyTokenAndAdmin } from "../middleware/authenticate.js";
+import AuthRoles from "../middleware/authroles.js";
 const router = express.Router();
 
 router
   .route("/")
-  .post(verifyTokenAndAdmin, PartnerRepo.createPartner)
+  .post(
+    AuthRoles.Authenticate,
+    AuthRoles.authorizeAdmin,
+    PartnerRepo.createPartner
+  )
   .get(PartnerRepo.allPartner);
-router.route("/:id").delete(verifyTokenAndAdmin, PartnerRepo.deletePartner);
+router
+  .route("/:id")
+  .delete(
+    AuthRoles.Authenticate,
+    AuthRoles.authorizeAdmin,
+    PartnerRepo.deletePartner
+  );
 
 export default router;

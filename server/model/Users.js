@@ -31,7 +31,9 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       require: true,
+      default: "applicant",
     },
+    isDeleted: { type: Boolean, default: false },
     image: { type: String },
     username: { type: String },
   },
@@ -65,6 +67,5 @@ userSchema.statics.compareDetails = async function (email, password) {
 
 const User = mongoose.model("User", userSchema);
 export default User;
-
 
 // https://www.geeksforgeeks.org/how-to-build-a-simple-voice-typer-app-in-android-using-java/

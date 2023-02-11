@@ -3,8 +3,13 @@ import Mongoose from "mongoose";
 const catSchema = new Mongoose.Schema(
   {
     name: { type: String, required: true },
-    price: { type: Number, required: true },
-    status: { type: String, required: true , default:"active"},
+    amount: { type: String, required: true },
+    status: {
+      type: String,
+      enum: ["active", "inactive"],
+      default: "inactive",
+    },
+    isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

@@ -108,33 +108,19 @@ const partnersSlice = createSlice({
     },
     [createPartners.rejected]: (state, { payload }) => {
       state.status = "failed";
-      state.message = payload;
+      state.message = payload.data;
     },
     [getPartners.pending]: (state) => {
       state.status = "loading";
     },
     [getPartners.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.partners = payload;
+      state.partners = payload.data;
       state.status = "idle";
     },
     [getPartners.rejected]: (state, { payload }) => {
       state.status = "failed";
-      state.message = payload;
-    },
-    //update case
-    [updatePartners.pending]: (state) => {
-      state.status = "loading";
-    },
-    [updatePartners.rejected]: (state, { payload }) => {
-      state.status = "failed";
-      state.mesage = payload;
-    },
-    [updatePartners.fulfilled]: (state, { payload }) => {
-      state.status = "succeeded";
-      state.partners = state.partners.map((pat) =>
-        payload._id === pat._id ? payload : pat
-      );
+      state.message = payload.message;
     },
     //deletecase
     [deletePartners.pending]: (state) => {
@@ -142,7 +128,7 @@ const partnersSlice = createSlice({
     },
     [deletePartners.rejected]: (state, { payload }) => {
       state.status = "failed";
-      state.mesage = payload;
+      state.mesage = payload.message;
     },
     [deletePartners.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";

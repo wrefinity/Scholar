@@ -14,6 +14,7 @@ const commentSchema = new Mongoose.Schema(
     reactions: { type: Object, default: {} },
     title: { type: String },
     date: { type: String },
+    isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

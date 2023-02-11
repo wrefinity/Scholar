@@ -8,18 +8,26 @@ const paymentSch = new Mongoose.Schema(
       ref: "User",
       required: true,
     },
+    cartegoryId: {
+      type: Mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
     scholarId: {
       type: Mongoose.Schema.Types.ObjectId,
       ref: "Scholarship",
       required: true,
     },
+    amount: { type: String, required: true },
+    reference: { type: String, required: true },
     address: { type: String, required: true },
     phoneNo: { type: String, required: true },
     country: { type: String, required: true },
     state: { type: String, required: true },
     city: { type: String, required: true },
-    zip_code: { type: String, required: true },
+    zip: { type: String, required: true },
     fullname: { type: String, required: true },
+    isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

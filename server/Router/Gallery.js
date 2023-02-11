@@ -1,17 +1,28 @@
 import express from "express";
 import GalleryRepo from "../controller/Gallery.js";
-import { verifyTokenAndAdmin } from "../middleware/authenticate.js";
-
+import AuthRoles from "../middleware/authroles.js";
 const router = express.Router();
 
 router
   .route("/")
-  .post(verifyTokenAndAdmin, GalleryRepo.createGallery)
+  .post(
+    AuthRoles.Authenticate,
+    AuthRoles.authorizeAdmin,
+    GalleryRepo.createGallery
+  )
   .get(GalleryRepo.allGalleries);
 router
   .route("/:id")
-  .delete(verifyTokenAndAdmin, GalleryRepo.deleteGallery)
-  .patch(verifyTokenAndAdmin, GalleryRepo.updateGallery)
+  .delete(
+    AuthRoles.Authenticate,
+    AuthRoles.authorizeAdmin,
+    GalleryRepo.deleteGallery
+  )
+  .patch(
+    AuthRoles.Authenticate,
+    AuthRoles.authorizeAdmin,
+    GalleryRepo.updateGallery
+  )
   .get(GalleryRepo.singleGallery);
 
 export default router;

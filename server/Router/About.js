@@ -1,17 +1,24 @@
 import express from "express";
 import AboutRepo from "../controller/About.js";
-import { verifyTokenAndAdmin } from "../middleware/authenticate.js";
-
+import AuthRoles from "../middleware/authroles.js";
 const router = express.Router();
 
 router
   .route("/")
-  .post(verifyTokenAndAdmin, AboutRepo.createAbout)
+  .post(AuthRoles.Authenticate, AuthRoles.authorizeAdmin, AboutRepo.createAbout)
   .get(AboutRepo.allAbout);
 router
   .route("/:id")
-  .delete(verifyTokenAndAdmin, AboutRepo.deleteAbout)
-  .patch(verifyTokenAndAdmin, AboutRepo.updateAbout)
+  .delete(
+    AuthRoles.Authenticate,
+    AuthRoles.authorizeAdmin,
+    AboutRepo.deleteAbout
+  )
+  .patch(
+    AuthRoles.Authenticate,
+    AuthRoles.authorizeAdmin,
+    AboutRepo.updateAbout
+  )
   .get(AboutRepo.singleAbout);
 
 export default router;

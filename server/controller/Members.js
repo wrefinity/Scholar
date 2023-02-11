@@ -28,7 +28,7 @@ class MemberRepo {
     if (!match) {
       throw new CustomError.NotFoundRequestError(`No member with id : ${id}`);
     }
-    const updated = await ModelActions.updator(About, id, req.body);
+    const updated = await ModelActions.updator(Members, id, req.body);
     updated && res.status(StatusCodes.OK).json(updated);
   });
 

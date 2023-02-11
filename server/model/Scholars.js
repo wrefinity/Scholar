@@ -7,6 +7,11 @@ const scholarItem = new Mongoose.Schema(
       ref: "Post",
       required: true,
     },
+    userId: {
+      type: Mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     // personal information
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },
@@ -27,8 +32,8 @@ const scholarItem = new Mongoose.Schema(
     scholarName: {
       type: Mongoose.Schema.Types.ObjectId,
       ref: "Type",
-      required: true,
     },
+    isDeleted: { type: Boolean, default: false },
     idCard: { type: String },
     letter: { type: String },
     result: { type: String, rquired: true },

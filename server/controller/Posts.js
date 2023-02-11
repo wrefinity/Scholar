@@ -28,7 +28,7 @@ class PostRepo {
     if (!match) {
       throw new CustomError.NotFoundRequestError(`No post with id : ${id}`);
     }
-    const updated = await ModelActions.updator(About, id, req.body);
+    const updated = await ModelActions.updator(Post, id, req.body);
     updated && res.status(StatusCodes.OK).json({ updated });
   });
 

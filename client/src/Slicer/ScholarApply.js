@@ -1,15 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import requestHandler from "./requestHandler";
-const API_URL = "members";
+const API_URL = "scholarships";
 
 const initialState = {
-  members: [],
+  scholarships: [],
   status: "idle",
   message: "",
 };
 
-export const createMembers = createAsyncThunk(
-  "members/create",
+export const createScholarship = createAsyncThunk(
+  "scholarships/create",
   async (credentials, ThunkAPI) => {
     try {
       const token =
@@ -32,11 +32,14 @@ export const createMembers = createAsyncThunk(
   }
 );
 
-export const getMembers = createAsyncThunk(
-  "members/get_all",
+export const getScholarship = createAsyncThunk(
+  "scholarships/get_all",
   async (_, ThunkAPI) => {
     try {
-      const res = await requestHandler.axioGet(API_URL);
+      const token =
+        ThunkAPI.getState().auth.user.token ??
+        JSON.parse(localStorage.getItem("user")).token;
+      const res = await requestHandler.axioGetHeader(API_URL, token);
       return res?.data;
     } catch (error) {
       const message =
@@ -48,8 +51,8 @@ export const getMembers = createAsyncThunk(
   }
 );
 
-export const updateMembers = createAsyncThunk(
-  "members/update",
+export const updateScholarShip = createAsyncThunk(
+  "scholarships/update",
   async (credentials, ThunkAPI) => {
     try {
       const token =
@@ -71,8 +74,8 @@ export const updateMembers = createAsyncThunk(
     }
   }
 );
-export const deleteMembers = createAsyncThunk(
-  "members/delete",
+export const deleteScholarship = createAsyncThunk(
+  "scholarships/delete",
   async (credentials, thunkAPI) => {
     try {
       const token =
@@ -93,8 +96,8 @@ export const deleteMembers = createAsyncThunk(
   }
 );
 
-const membersSlice = createSlice({
-  name: "members",
+const scholarshipSlice = createSlice({
+  name: "scholarships",
   initialState,
   reducers: {
     reseter: (state) => {
@@ -103,68 +106,68 @@ const membersSlice = createSlice({
     },
   },
   extraReducers: {
-    [createMembers.pending]: (state) => {
+    [createScholarShip.pending]: (state) => {
       state.status = "loading";
     },
-    [createMembers.fulfilled]: (state, { payload }) => {
+    [createScholarShip.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.members.push(payload.data);
+      state.scholarships.push(payload.data);
     },
-    [createMembers.rejected]: (state, { payload }) => {
+    [createScholarShip.rejected]: (state, { payload }) => {
       state.status = "failed";
       state.message = payload.data.message;
     },
-    [getMembers.pending]: (state) => {
+    [getScholarship.pending]: (state) => {
       state.status = "loading";
     },
-    [getMembers.fulfilled]: (state, { payload }) => {
+    [getScholarship.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.members = payload;
+      state.scholarships = payload.data;
       state.status = "idle";
     },
-    [getMembers.rejected]: (state, { payload }) => {
+    [getScholarship.rejected]: (state, { payload }) => {
       state.status = "failed";
-      state.message = payload;
+      state.message = payload.data.message;
       state.status = "idle";
     },
     //update case
-    [updateMembers.pending]: (state) => {
+    [updateScholarShip.pending]: (state) => {
       state.status = "loading";
     },
-    [updateMembers.rejected]: (state, { payload }) => {
+    [updateScholarShip.rejected]: (state, { payload }) => {
       state.status = "failed";
       state.message = payload;
     },
-    [updateMembers.fulfilled]: (state, { payload }) => {
+    [updateScholarShip.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.members = state.members.map((mem) =>
-        payload._id === mem._id ? payload : mem
+      state.scholarships = state.scholarships.map((sch) =>
+        payload._id === sch._id ? payload : sch
       );
     },
     //deletecase
-    [deleteMembers.pending]: (state) => {
+    [deleteScholarship.pending]: (state) => {
       state.status = "loading";
     },
-    [deleteMembers.rejected]: (state, { payload }) => {
+    [deleteScholarship.rejected]: (state, { payload }) => {
       state.status = "failed";
       state.message = payload;
     },
-    [deleteMembers.fulfilled]: (state, { payload }) => {
+    [deleteScholarship.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.members = state.members.filter(
-        (mem) => mem._id !== payload?.data._id
+      state.scholarships = state.scholarships.filter(
+        (sch) => sch._id !== payload?.data._id
       );
       state.message = "deletion successful";
     },
   },
 });
 
-const { reducer, actions } = membersSlice;
-export const selectAllMembers = (state) => state.members.members;
-export const getMemberStatus = (state) => state.members.status;
-export const getMemberError = (state) => state.members.message;
-export const getMemberById = (state, id) =>
-  state.members.members.find((mem) => mem._id === id);
+const { reducer, actions } = scholarshipSlice;
+export const selectAllScholarships = (state) => state.scholarships.scholarships;
+export const getScholarshipStatus = (state) => state.scholarships.status;
+export const getScholarshipsError = (state) => state.scholarships.message;
+export const getScholarshipsById = (state, id) =>
+  state.scholarships.scholarships.find((sch) => sch._id === id);
 
 export const { reseter } = actions;
 export default reducer;

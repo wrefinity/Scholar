@@ -1,20 +1,33 @@
 import express from "express";
 import CategoryRepo from "../controller/Category.js";
-import {
-  verifyTokenAndRoles,
-  verifyTokenAndAdmin,
-} from "../middleware/authenticate.js";
+import AuthRoles from "../middleware/authroles.js";
 
 const router = express.Router();
 
 router
   .route("/")
-  .post(verifyTokenAndAdmin, CategoryRepo.createCategory)
+  .post(
+    AuthRoles.Authenticate,
+    AuthRoles.authorizeAdmin,
+    CategoryRepo.createCategory
+  )
   .get(CategoryRepo.allCategory);
 router
   .route("/:id")
-  .delete(verifyTokenAndRoles, CategoryRepo.deleteCategory)
-  .patch(verifyTokenAndRoles, CategoryRepo.updateCategory)
-  .get(verifyTokenAndRoles, CategoryRepo.singleCategory);
+  .delete(
+    AuthRoles.Authenticate,
+    AuthRoles.authorizeAdmin,
+    CategoryRepo.deleteCategory
+  )
+  .patch(
+    AuthRoles.Authenticate,
+    AuthRoles.authorizeAdmin,
+    CategoryRepo.updateCategory
+  )
+  .get(
+    AuthRoles.Authenticate,
+    AuthRoles.authorizeAdmin,
+    CategoryRepo.singleCategory
+  );
 
 export default router;

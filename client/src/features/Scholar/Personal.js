@@ -3,10 +3,8 @@ import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 
 const Personal = ({
   scholar,
-  setScholar,
-  handleInputImage,
   handleInput,
-  FileInput,
+  setScholar,
   page,
   setPage,
   x,

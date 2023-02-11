@@ -17,6 +17,8 @@ import galleryRoute from "./Router/Gallery.js";
 import memberRoute from "./Router/Members.js";
 import partnerRoute from "./Router/Partners.js";
 import serviceRoute from "./Router/Services.js";
+import scholarRoute from "./Router/scholar.js";
+import typeRoute from "./Router/Typess.js";
 import errorHandler from "./middleware/errorMiddleware.js";
 import notFoundMiddleware from "./middleware/not_found.js";
 
@@ -48,6 +50,8 @@ app.use("/api/galleries", galleryRoute);
 app.use("/api/members", memberRoute);
 app.use("/api/services", serviceRoute);
 app.use("/api/partners", partnerRoute);
+app.use("/api/scholarships", scholarRoute);
+app.use("/api/types", typeRoute);
 
 app.use(errorHandler);
 app.use(notFoundMiddleware);

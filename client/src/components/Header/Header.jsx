@@ -82,6 +82,8 @@ const Header = () => {
               <NavDropdown.Item href="/gallery_admin" className="mt-2">Gallery</NavDropdown.Item>
               <NavDropdown.Item href="/member_admin" className="mt-2">Member</NavDropdown.Item>
               <NavDropdown.Item href="/service_admin" className="mt-2">Service</NavDropdown.Item>
+              <NavDropdown.Item href="/patners" className="mt-2">Partner</NavDropdown.Item>
+              <NavDropdown.Item href="/categories" className="mt-2">Category</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2" className="mt-2">
                 Agriculture
               </NavDropdown.Item>

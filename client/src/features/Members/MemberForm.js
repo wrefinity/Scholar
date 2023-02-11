@@ -25,7 +25,6 @@ const MemberForm = () => {
     about: "",
   });
   const { status, message } = useSelector((state) => state.members);
-
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const referal = useRef();
