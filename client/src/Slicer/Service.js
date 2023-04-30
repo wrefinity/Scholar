@@ -127,7 +127,7 @@ const serviceSlice = createSlice({
     },
     [getServices.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.services = payload.data;
+      state.services = payload;
       state.status = "idle";
     },
     [getServices.rejected]: (state, { payload }) => {
@@ -148,6 +148,7 @@ const serviceSlice = createSlice({
       state.services = state.services.map((s) =>
         payload._id === s._id ? payload : s
       );
+      state.message = "update operation successful";
     },
     //deletecase
     [deleteServices.pending]: (state) => {
@@ -159,15 +160,17 @@ const serviceSlice = createSlice({
     },
     [deleteServices.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.services = state.services.filter((s) => s._id !== payload._id);
+      const { _id } = payload;
+      state.services = state.services.filter((s) => s._id !== _id);
+      state.message = "deleted successfully";
     },
   },
 });
 
 const { reducer, actions } = serviceSlice;
-export const selectAllServices = (state) => state.services.services;
-export const getServiceStatus = (state) => state.services.status;
-export const getServiceError = (state) => state.services.message;
+export const selectAllServices = (state) => state?.services?.services;
+export const getServiceStatus = (state) => state?.services?.status;
+export const getServiceError = (state) => state?.services?.message;
 export const getServiceById = (state, id) =>
   state.services.services.find((ser) => ser._id === id);
 

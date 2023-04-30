@@ -1,15 +1,69 @@
-import React from "react";
+import React, { useState } from "react";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 const Personal = ({
   scholar,
   handleInput,
+  scholarId,
   setScholar,
   page,
   setPage,
   x,
   setX,
 }) => {
+  const [errorx, setError] = useState({
+    email: "",
+    firstname: "",
+    lastname: "",
+    city: "",
+    state: "",
+    zip: "",
+    localGovt: "",
+    country: "",
+  });
+  const checkVal = [
+    "email",
+    "firstname",
+    "lastname",
+    "city",
+    "state",
+    "zip",
+    "localGovt",
+    "country",
+  ];
+
+  const checkerReset = () => {
+    setError({
+      email: "",
+      firstname: "",
+      lastname: "",
+      city: "",
+      state: "",
+      zip: "",
+      localGovt: "",
+      country: "",
+    });
+  };
+
+  const handleCheckField = (e) => {
+    e.preventDefault();
+    checkerReset();
+    for (const x of checkVal) {
+      if (scholar[x] === "" || scholar[x] === null) {
+        errorx[x] = `${x} required`;
+        toast.error(errorx[x], { autoClose: 4000 });
+      }
+    }
+    // setError(errors);
+    const checker = Object.values(errorx).every((x) => x === null || x === "");
+    console.log(errorx);
+    console.warn(checker);
+    if (checker) {
+      setPage(page + 1);
+      setX(1000);
+    }
+  };
   return (
     <div className="mb-5 mt-5 pb-5">
       <Container className="mb-5 mt-5 pb-5">
@@ -39,6 +93,7 @@ const Personal = ({
                           value={scholar.firstname}
                           onChange={(e) => handleInput(e, setScholar)}
                         />
+                        <p className="text-danger">{errorx?.firstname}</p>
                       </Form.Group>
                       <Form.Group
                         as={Col}
@@ -54,6 +109,7 @@ const Personal = ({
                           value={scholar.lastname}
                           onChange={(e) => handleInput(e, setScholar)}
                         />
+                        <p className="text-danger">{errorx?.lastname}</p>
                       </Form.Group>
                       <Form.Group
                         as={Col}
@@ -63,12 +119,13 @@ const Personal = ({
                         <Form.Label>Middle name</Form.Label>
                         <Form.Control
                           type="text"
-                          placeholder="Last name"
-                          name="lastname"
+                          placeholder="Middle Name"
+                          name="middlename"
                           required
                           value={scholar.middlename}
                           onChange={(e) => handleInput(e, setScholar)}
                         />
+                        <p className="text-danger">{errorx?.middlename}</p>
                       </Form.Group>
                     </Row>
 
@@ -170,23 +227,7 @@ const Personal = ({
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Row>
-
-                    <Form.Group className="mb-3">
-                      <Form.Check
-                        required
-                        label="Agree to terms and conditions"
-                        feedback="You must agree before submitting."
-                        feedbackType="invalid"
-                      />
-                    </Form.Group>
-                    <Button
-                      onClick={() => {
-                        setPage(page + 1);
-                        setX(1000);
-                      }}
-                    >
-                      Next{" "}
-                    </Button>
+                    <Button onClick={(e) => handleCheckField(e)}>Next </Button>
                   </div>
                 </div>
               </Card.Body>

@@ -11,7 +11,7 @@ class ScholarRepo {
     if (!checkerSchole) {
       scholarDoc = await Scholar.create({
         userId,
-        scholarships: scholar,
+        scholarships: [scholar],
       });
     } else {
       scholarDoc = await Scholar.updateOne(
@@ -31,9 +31,10 @@ class ScholarRepo {
 
   deleteUserScholar = async (res, req) => {
     const { scholarId } = req.params;
-    await Scholar.deleteOne({ _id: scholarId });
+    const deleted = await Scholar.updateOne({ _id: scholarId, isDeleted: true }).exec();
     res.status(StatusCodes.OK).json({
       success: true,
+      scholar:deleted,
       message: "scholarship deleted successfully",
     });
   };
@@ -58,14 +59,18 @@ class ScholarRepo {
   getScholar = async (req, res) => {
     const { userId } = req.params;
     checkId(userId);
-    const scholarDoc = await Scholar.findOne({ userId });
+    const scholarDoc = await Scholar.findOne({
+      userId,
+    })
+      .populate("Post")
+      .populate("User");
     res.status(StatusCodes.OK).json({
       success: true,
       scholar: scholarDoc,
     });
   };
-  getAllScholar = async (req, res) => {
-    const scholarDoc = await Scholar.find();
+  getAllScholar = async (_, res) => {
+    const scholarDoc = await Scholar.find().populate("User");
     return res.status(StatusCodes.OK).json({
       scholarships: scholarDoc,
     });

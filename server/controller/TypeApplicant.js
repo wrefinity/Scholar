@@ -12,6 +12,7 @@ class TyperRepo {
         "Please provide the necessary values"
       );
     }
+    console.log("log", req.body);
     const data = await ModelActions.creator(TypeModel, req.body);
     data && res.status(StatusCodes.CREATED).json(data);
   });
@@ -41,7 +42,9 @@ class TyperRepo {
         `No TypeModel with id : ${id}`
       );
     }
+
     const deleted = await ModelActions.deletor(TypeModel, id);
+    console.log(deleted);
     deleted && res.status(StatusCodes.OK).json(deleted);
   });
   allTypeModel = asyncHandler(async (_, res) => {

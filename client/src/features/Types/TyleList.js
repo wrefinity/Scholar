@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Row } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { selectAllTypes, deleteType } from "../../Slicer/Types";
 import moment from "moment";
@@ -13,10 +13,10 @@ const TyleList = () => {
     ? ""
     : categories.map((cat) => {
         return (
-          <tr>
+          <tr key={cat._id}>
             <td>{moment(cat.createdAt).format("DD/MM/YYYY")}</td>
             <td>{cat.name}</td>
-            <td scope="col">
+            <td>
               <button
                 className="btn btn-sm btn-danger m-1 mb-1"
                 onClick={() => {
@@ -31,10 +31,11 @@ const TyleList = () => {
       });
 
   return (
-    <div className="mb-5 mt-5 d-flex justify-content-center align-items-center">
+    <div className="mb-5 mt-5 justify-content-center align-items-center">
       <Table striped className="mb-5" align="middle">
         <thead>
           <tr>
+            <th scope="col"> Date</th>
             <th scope="col"> Applicant Type</th>
             <th scope="col"> Controls </th>
           </tr>

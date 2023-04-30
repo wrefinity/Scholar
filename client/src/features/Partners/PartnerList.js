@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Row } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { selectAllPatners, deletePartners } from "../../Slicer/Partners";
 import moment from "moment";

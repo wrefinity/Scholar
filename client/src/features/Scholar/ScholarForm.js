@@ -2,17 +2,20 @@ import React, { useState, useRef, useEffect } from "react";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { LineWave } from "react-loader-spinner";
 import {
   handleInput,
-  handleInputImage,
+  loaderSize,
+  loaderColor,
   validateEmpty,
 } from "../../Utils/InputHelpers";
 import { FileInput } from "../../Utils/FileInput";
 import { createScholarsPost, reseter } from "../../Slicer/Post";
+import { selectAllCategories } from "../../Slicer/Categories";
 const ScholarForm = () => {
   const [scholar, setScholar] = useState({
     image: "",
-    title: "",
+    categoryId: "",
     benefitPre: "",
     benefitUnder: "",
     benefitPost: "",
@@ -21,17 +24,34 @@ const ScholarForm = () => {
     eligibilityUnder: "",
     eligibilityPost: "",
     country: "",
-    eligible_country: [],
+    eligible_country: "",
     host: "",
     deadline: "",
   });
 
   const dispatch = useDispatch();
   const referal = useRef();
-  const { isLoading, status, message } = useSelector((state) => state.posts);
-
+  const { status, message } = useSelector((state) => state.posts);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
+
+  //get catgories
+  const categories = useSelector(selectAllCategories);
+  const categoriesOption = !categories
+    ? ""
+    : Array.from(categories)
+        .sort((a, b) => {
+          if (a.name < b.name) return -1;
+          if (a.name > b.name) return 1;
+          return 0;
+        })
+        .map((category) => {
+          return (
+            <option key={category._id} value={category._id}>
+              {category.name}
+            </option>
+          );
+        });
 
   const handleInputImage = (name, value) => {
     setScholar((prev) => ({ ...prev, [name]: value }));
@@ -39,7 +59,7 @@ const ScholarForm = () => {
   const reset = () => {
     setScholar({
       image: "",
-      title: "",
+      categoryId: "",
       benefitPre: "",
       benefitUnder: "",
       benefitPost: "",
@@ -65,19 +85,22 @@ const ScholarForm = () => {
   }, [formErrors, message, dispatch]);
 
   const addScholar = async () => {
-    if (Object.keys(formErrors).length === 0 && status === "idle") {
+    if (Object.keys(formErrors).length === 0 && isSubmit && status === "idle") {
       dispatch(reseter());
       dispatch(createScholarsPost(scholar));
+      setIsSubmit(false);
     }
 
     if (status === "succeeded") {
       toast.success("record added", { autoClose: 2000 });
       reset();
       dispatch(reseter());
+      setIsSubmit(false);
     }
     if (status === "failed") {
       toast.error(message, { autoClose: 4000 });
       dispatch(reseter());
+      setIsSubmit(false);
     }
   };
   referal.current = addScholar;
@@ -85,10 +108,6 @@ const ScholarForm = () => {
   useEffect(() => {
     referal.current();
   }, []);
-
-  if (isLoading) {
-    // return <Spinner />
-  }
 
   return (
     <div className="mb-5 pb-5">
@@ -106,14 +125,17 @@ const ScholarForm = () => {
                   <div className="mb-3">
                     <Form onSubmit={handleAddScholar}>
                       <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className="text-center">Title</Form.Label>
+                        <Form.Label className="text-center">
+                          Scholarship Type
+                        </Form.Label>
                         <Form.Select
                           aria-label="Default select example"
-                          name="title"
-                          value={scholar.title}
+                          name="categoryId"
+                          value={scholar.categoryId}
                           onChange={(e) => handleInput(e, setScholar)}
                         >
                           <option>select scholarship </option>
+                          {categoriesOption}
                         </Form.Select>
                       </Form.Group>
 
@@ -186,31 +208,29 @@ const ScholarForm = () => {
                           placeholder="enter host for scholarship"
                         />
                       </Form.Group>
-
-                      <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Group className="mb-3" controlId="formBasicHost">
                         <Form.Label className="text-center">
                           Host Country
                         </Form.Label>
-                        <Form.Select
-                          aria-label="Default select example"
+                        <Form.Control
+                          type="text"
                           name="country"
-                          value={scholar.benefit}
+                          value={scholar.country}
                           onChange={(e) => handleInput(e, setScholar)}
-                        >
-                          <option>select country </option>
-                        </Form.Select>
+                          placeholder="enter host country"
+                        />
                       </Form.Group>
-                      <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Group className="mb-3" controlId="formBasicHost">
                         <Form.Label className="text-center">
-                          Eligibility Country
+                          Eligible Countries
                         </Form.Label>
-                        <Form.Select
-                          onChange={(e) => handleInput(e, setScholar)}
+                        <Form.Control
+                          type="text"
                           name="eligible_country"
-                          aria-label="Default select example"
-                        >
-                          <option>select country</option>
-                        </Form.Select>
+                          value={scholar.eligible_country}
+                          onChange={(e) => handleInput(e, setScholar)}
+                          placeholder="enter eligble country"
+                        />
                       </Form.Group>
 
                       <Form.Group
@@ -282,10 +302,25 @@ const ScholarForm = () => {
                           onChange={(e) => handleInput(e, setScholar)}
                         />
                       </Form.Group>
+
                       <div className="d-grid">
-                        <Button variant="primary" type="submit">
-                          Post
-                        </Button>
+                        {status !== "loading" ? (
+                          <Button
+                            variant="primary"
+                            type="submit"
+                            onClick={handleAddScholar}
+                          >
+                            Post
+                          </Button>
+                        ) : (
+                          <div className="d-flex justify-content-center">
+                            <LineWave
+                              color={loaderColor}
+                              height={loaderSize}
+                              width={loaderSize}
+                            />
+                          </div>
+                        )}
                       </div>
                     </Form>
                   </div>

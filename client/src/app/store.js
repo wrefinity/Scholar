@@ -10,6 +10,8 @@ import MemberReducer from "../Slicer/Members";
 import userReducer from "../Slicer/UserSlice";
 import categoriesReducer from "../Slicer/Categories";
 import scholarReducer from "../Slicer/ScholarApply";
+import CatPergants from "../Slicer/CatPergant";
+import Pergant from "../Slicer/Pergent";
 import typeReducer from "../Slicer/Types";
 const store = configureStore({
   reducer: {
@@ -21,10 +23,12 @@ const store = configureStore({
     members: MemberReducer,
     users: userReducer,
     about: AboutReducer,
-    patners: patnerReducer,
+    partners: patnerReducer,
     categories: categoriesReducer,
     scholarships: scholarReducer,
     types: typeReducer,
+    catpergants: CatPergants,
+    pergants: Pergant,
   },
 });
 export default store;

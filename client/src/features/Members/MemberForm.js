@@ -73,7 +73,7 @@ const MemberForm = () => {
   };
 
   return (
-    <div className="mb-5 pb-5">
+    <div className="mb-5">
       <Container className="mt-5 pt-5 mb-5">
         <Row className="d-flex justify-content-center align-items-center">
           <Col md={8} lg={6} xs={12}>

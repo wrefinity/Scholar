@@ -742,3 +742,32 @@ nav.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
   height: 100%;
   background-color: rgb(98, 0, 255);
 }
+
+.mbt {
+  min-height: 100vh;
+}
+
+.cus_color {
+  background: #f40594;
+  color: white;
+}
+
+.cus_txt_color {
+  color: #920058;
+}
+
+.img-pro {
+  width: 100%;
+  height: 250px;
+}
+
+
+#background-video {
+  object-fit: cover;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  left: 0;
+  top: 0;
+  z-index: -1;
+}

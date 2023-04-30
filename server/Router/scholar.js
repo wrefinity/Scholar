@@ -23,6 +23,7 @@ router
     AuthRoles.authorizeStudentAdmin,
     ScholarRepo.deleteUserScholar
   );
+router.route("/:userId").get(AuthRoles.Authenticate, ScholarRepo.getScholar);
 router
   .route("/:userId/:postId")
   .patch(

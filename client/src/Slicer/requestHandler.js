@@ -41,6 +41,13 @@ const axioDeleteHeader = async (route, token) => {
   return await axios.delete(route, setConfig(token));
 };
 
+const getToken = (ThunkAPI) => {
+  return (
+    ThunkAPI.getState().auth.user.token ??
+    JSON.parse(localStorage.getItem("user")).token
+  );
+};
+
 const requestHandler = {
   axioDeleteHeader,
   axioGet,
@@ -50,6 +57,7 @@ const requestHandler = {
   axioPatch,
   axioPatchHeader,
   axioDelete,
+  getToken,
 };
 
 export default requestHandler;

@@ -13,7 +13,7 @@ class ServiceRepo {
       );
     }
     const data = await ModelActions.creator(Services, req.body);
-    data && res.status(StatusCodes.CREATED).json({ data });
+    data && res.status(StatusCodes.CREATED).json(data);
   });
 
   updateService = asyncHandler(async (req, res) => {
@@ -29,23 +29,22 @@ class ServiceRepo {
       throw new CustomError.NotFoundRequestError(`No service with id : ${id}`);
     }
     const updated = await ModelActions.updator(Services, id, req.body);
-    updated && res.status(StatusCodes.OK).json({ updated });
+    updated && res.status(StatusCodes.OK).json(updated);
   });
 
   deleteService = asyncHandler(async (req, res) => {
     const { id } = req.params;
     checkId(id);
     const match = await ModelActions.findOne(Services, { _id: id });
-    if (!match) {
+    if (!match)
       throw new CustomError.NotFoundRequestError(`No service with id : ${id}`);
-    }
     const deleted = await ModelActions.deletor(Services, id);
-    deleted && res.status(StatusCodes.OK).json({ message: "service deleted" });
+    deleted && res.status(StatusCodes.OK).json(deleted);
   });
 
   allServices = asyncHandler(async (req, res) => {
     const data = await ModelActions.findAll(Services);
-    data && res.status(StatusCodes.OK).json({ data });
+    data && res.status(StatusCodes.OK).json(data);
   });
 
   singleService = asyncHandler(async (req, res) => {
@@ -55,7 +54,7 @@ class ServiceRepo {
     if (!data) {
       throw new CustomError.NotFoundRequestError(`No service with id : ${id}`);
     }
-    res.status(StatusCodes.OK).json({ data });
+    res.status(StatusCodes.OK).json(data);
   });
 }
 export default new ServiceRepo();

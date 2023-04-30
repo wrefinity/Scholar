@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Row } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { selectAllCategories, deleteCategories } from "../../Slicer/Categories";
 import moment from "moment";
@@ -13,7 +13,7 @@ const CategoryList = () => {
     ? ""
     : categories.map((cat) => {
         return (
-          <tr>
+          <tr key={cat._id}>
             <td>{moment(cat.createdAt).format("DD/MM/YYYY")}</td>
             <td>{cat.name}</td>
             <td>{cat.amount}</td>
@@ -37,7 +37,8 @@ const CategoryList = () => {
       <Table striped className="mb-5" align="middle">
         <thead>
           <tr>
-            <th scope="col"> Scholarship Name </th>
+            <th scope="col"> Date </th>
+            <th scope="col"> Type </th>
             <th scope="col"> Amount </th>
             <th scope="col"> status </th>
             <th scope="col"> Controls </th>

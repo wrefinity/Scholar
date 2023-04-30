@@ -159,9 +159,9 @@ const commentSlice = createSlice({
   },
 });
 
-export const selectAllComments = (state) => state.comments.comments;
-export const getCommentStatus = (state) => state.comments.status;
-export const getCommentError = (state) => state.comments.message;
+export const selectAllComments = (state) => state?.comments?.comments;
+export const getCommentStatus = (state) => state?.comments?.status;
+export const getCommentError = (state) => state?.comments?.message;
 export const getCommentById = (state, id) =>
   state.comments.comments.find((com) => com._id === id);
 export const { reseter } = commentSlice.actions;

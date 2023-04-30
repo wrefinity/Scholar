@@ -7,7 +7,7 @@ const initialState = {
   message: "",
 };
 const API_URL = "types";
-export const createCategory = createAsyncThunk(
+export const createTypes = createAsyncThunk(
   "types/create",
   async (credentials, thunkAPI) => {
     try {
@@ -51,9 +51,7 @@ export const updateType = createAsyncThunk(
   "types/update",
   async (credentials, thunkAPI) => {
     try {
-      const token =
-        thunkAPI.getState().auth.user.token ??
-        JSON.parse(localStorage.getItem("user")).token;
+      const token = requestHandler.getToken(thunkAPI);
       const { _id, ...rest } = credentials;
       const res = await requestHandler.axioPatchHeader(
         `${API_URL}/${_id}`,
@@ -70,13 +68,11 @@ export const updateType = createAsyncThunk(
     }
   }
 );
-const deleteType = createAsyncThunk(
+export const deleteType = createAsyncThunk(
   "types/delete",
   async (credentials, thunkAPI) => {
     try {
-      const token =
-        thunkAPI.getState().auth.user.token ??
-        JSON.parse(localStorage.getItem("user")).token;
+      const token = requestHandler.getToken(thunkAPI);
       const res = await requestHandler.axioDeleteHeader(
         `${API_URL}/${credentials}`,
         token
@@ -107,7 +103,8 @@ const typeSlice = createSlice({
     },
     [createTypes.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.types.push(payload.data);
+      state.types.push(payload);
+      state.message = "created the type of applicant class";
     },
     [createTypes.rejected]: (state, { payload }) => {
       state.status = "failed";
@@ -118,7 +115,7 @@ const typeSlice = createSlice({
     },
     [getTypes.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.types = payload.data;
+      state.types = payload;
       state.status = "idle";
     },
     [getTypes.rejected]: (state, { payload }) => {
@@ -137,9 +134,7 @@ const typeSlice = createSlice({
     [updateType.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
       const { _id } = payload.data;
-      state.types = state.types.map((typ) =>
-        typ._id === _id ? payload : typ
-      );
+      state.types = state.types.map((typ) => (typ._id === _id ? payload : typ));
     },
     //deletecase
     [deleteType.pending]: (state) => {
@@ -151,15 +146,16 @@ const typeSlice = createSlice({
     },
     [deleteType.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      const { _id } = payload.data;
+      const { _id } = payload;
       state.types = state.types.filter((typ) => typ._id !== _id);
+      state.message = "deletion success";
     },
   },
 });
 
-export const selectAllTypes = (state) => state.categories.categories;
-export const getTypeStatus = (state) => state.categories.status;
-export const getTypeMessage = (state) => state.categories.message;
+export const selectAllTypes = (state) => state?.types?.types;
+export const getTypeStatus = (state) => state?.types?.status;
+export const getTypeMessage = (state) => state?.types?.message;
 export const getTypeById = (state, id) =>
   state.types.types.find((typ) => typ._id === id);
 export const { reseter } = typeSlice.actions;

@@ -1,4 +1,5 @@
 import React from "react";
+import { Col, Button, Row, Container, Card } from "react-bootstrap";
 import FlutterWavePayment from "../../FlutterWavePayment";
 
 const PaymentOptions = ({ scholarship, reset, reseter }) => {

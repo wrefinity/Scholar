@@ -20,13 +20,10 @@ const paymentSch = new Mongoose.Schema(
     },
     amount: { type: String, required: true },
     reference: { type: String, required: true },
-    address: { type: String, required: true },
-    phoneNo: { type: String, required: true },
     country: { type: String, required: true },
     state: { type: String, required: true },
     city: { type: String, required: true },
     zip: { type: String, required: true },
-    fullname: { type: String, required: true },
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }

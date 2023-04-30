@@ -1,23 +1,19 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import Personal from "./Personal";
 import Educational from "./Educational";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import {
-  handleInput,
-  handleInputImage,
-  validateEmpty,
-} from "../../Utils/InputHelpers";
+import { useSelector } from "react-redux";
+
+import { handleInput, handleInputImage } from "../../Utils/InputHelpers";
 import { FileInput } from "../../Utils/FileInput";
-import { selectAllScholarships, reseter } from "../../Slicer/ScholarApply";
-import { selectAllCategories } from "../../Slicer/Categories";
+import { getPostById } from "../../Slicer/Post.js";
+import { reseter } from "../../Slicer/ScholarApply";
 import { useParams } from "react-router-dom";
 
 const ScholarIndex = () => {
   const [page, setPage] = useState(0);
   const [x, setX] = useState(0);
   const { scholarId } = useParams();
-  const categories = useSelector(selectAllCategories);
+  const targetScholar = useSelector((state) => getPostById(state, scholarId));
   const [scholar, setScholar] = useState({
     postId: "",
     firstname: "",
@@ -31,7 +27,7 @@ const ScholarIndex = () => {
     localGovt: "",
     country: "",
     scholarType: "",
-    scholarName: "",
+    scholarLevel: "",
     idCard: "",
     letter: "",
     result: "",
@@ -47,12 +43,12 @@ const ScholarIndex = () => {
       email: "",
       city: "",
       state: "",
-      amout: "",
+      amount: "",
       zip: "",
       localGovt: "",
       country: "",
       scholarType: "",
-      scholarName: "",
+      scholarLevel: "",
       idCard: "",
       letter: "",
       result: "",
@@ -61,59 +57,15 @@ const ScholarIndex = () => {
     });
   };
 
-  const scholarships = useSelector(selectAllScholarships);
-  const targetScholar = scholarships.filter(
-    (scholar) => scholar._id === scholarId
-  );
-
-  scholar.postId = targetScholar["_id"];
-
   // set amount before checking for empty field;
-  scholar.amount =
-    categories &&
-    Array.from(categories).find((cat) => cat._id === targetScholar?.categoryId)[
-      "amount"
-    ];
-
-  const dispatch = useDispatch();
-  const referal = useRef();
-  const { status, message } = useSelector((state) => state.posts);
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   setFormErrors(validateEmpty(scholar));
-  //   setIsSubmit(true);
-  // };
-
-  useEffect(() => {
-    referal.current();
-  }, [formErrors, message, dispatch]);
-
-  const addScholar = async () => {
-    if (Object.keys(formErrors).length === 0 && status === "idle" && isSubmit) {
-      dispatch(createScholarsPost(scholar));
-    }
-
-    if (status === "succeeded") {
-      toast.success("record added", { autoClose: 2000 });
-      reset();
-      reseter();
-    }
-    if (status === "failed") {
-      toast.error(message, { autoClose: 4000 });
-      reseter();
-    }
-  };
-  referal.current = addScholar;
-
-  useEffect(() => {
-    referal.current();
-  }, []);
-
+  scholar.postId = targetScholar?._id;
+  scholar.amount = targetScholar?.categoryId?.amount;
+  
   const componentList = [
     <Personal
       scholar={scholar}
       handleInput={handleInput}
+      scholarId={scholarId}
       setScholar={setScholar}
       page={page}
       setPage={setPage}
@@ -122,6 +74,7 @@ const ScholarIndex = () => {
     />,
     <Educational
       scholar={scholar}
+      scholarId={scholarId}
       handleInputImage={handleInputImage}
       handleInput={handleInput}
       setScholar={setScholar}

@@ -56,8 +56,9 @@ export const updateScholarPost = createAsyncThunk(
   async (credentials, ThunkAPI) => {
     try {
       const { _id, ...rest } = credentials;
-      const token = ThunkAPI.getState().auth.user.token ??
-      JSON.parse(localStorage.getItem("user")).token;
+      const token =
+        ThunkAPI.getState().auth.user.token ??
+        JSON.parse(localStorage.getItem("user")).token;
       const res = await requestHandler.axioPatchHeader(
         `${API_URL}/${_id}`,
         rest,
@@ -79,8 +80,9 @@ export const deleteScholarPost = createAsyncThunk(
   "scholarpost/delete",
   async (credentials, ThunkAPI) => {
     try {
-      const token = ThunkAPI.getState().auth.user.token ??
-      JSON.parse(localStorage.getItem("user")).token;
+      const token =
+        ThunkAPI.getState().auth.user.token ??
+        JSON.parse(localStorage.getItem("user")).token;
       const res = await requestHandler.axioDeleteHeader(
         `${API_URL}/${credentials._id}`,
         token
@@ -142,9 +144,9 @@ const postsSlice = createSlice({
     },
     [updateScholarPost.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.post = state.posts.map((p) =>
-        payload._id === p._id ? payload : p
-      );
+      const { _id } = payload.data;
+      state.post = state.posts.map((p) => (_id === p._id ? payload.data : p));
+      state.message = payload.message;
     },
     //deletecase
     [deleteScholarPost.pending]: (state) => {
@@ -156,15 +158,16 @@ const postsSlice = createSlice({
     },
     [deleteScholarPost.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.posts = state.posts.filter((p) => p._id !== payload._id);
+      const { _id } = payload.data;
+      state.posts = state.posts.filter((p) => p._id !== _id);
     },
   },
 });
 
 const { reducer, actions } = postsSlice;
-export const selectAllPost = (state) => state.posts.posts;
-export const getPostStatus = (state) => state.posts.status;
-export const getPostError = (state) => state.posts.message;
+export const selectAllPost = (state) => state?.posts?.posts;
+export const getPostStatus = (state) => state?.posts?.status;
+export const getPostError = (state) => state?.posts?.message;
 export const getPostById = (state, id) =>
   state.posts.posts.find((pst) => pst._id === id);
 

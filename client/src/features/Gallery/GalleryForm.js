@@ -39,13 +39,12 @@ const GalleryForm = () => {
   const dispatchGallery = () => {
     if (Object.keys(formErrors).length === 0 && isSubmit && status === "idle") {
       dispatch(reseter());
-      console.log(gallery);
-      // dispatch(createGallery(gallery));
+      dispatch(createGallery(gallery));
       setIsSubmit(false);
     }
 
     if (status === "succeeded") {
-      toast.success("record added", { autoClose: 2000 });
+      toast.success(message, { autoClose: 2000 });
       reset();
       dispatch(reseter());
       setIsSubmit(false);

@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import requestHandler from "./requestHandler";
 
 const API_URL = "users";
-export const getUserState = () => {
+export const gettate = () => {
   try {
     const user = localStorage.getItem("user");
     if (user === null) return undefined;
@@ -13,7 +13,7 @@ export const getUserState = () => {
 };
 
 const initialState = {
-  user: getUserState(),
+  user: gettate(),
   status: "idle",
   message: "",
 };
@@ -23,7 +23,7 @@ export const register = createAsyncThunk(
   "user/register",
   async (credentials, { rejectWithValue }) => {
     try {
-      return await requestHandler.axioPost(API_URL, credentials);
+      return await requestHandler.axioPost(`${API_URL}/`, credentials);
     } catch (error) {
       const message =
         (error.response &&
@@ -67,7 +67,7 @@ export const logout = createAsyncThunk("auth/logout", async (_, ThunkAPI) => {
 });
 
 const authSlice = createSlice({
-  name: "users",
+  name: "user",
   initialState,
   reducers: {
     setLogout: (state, action) => {
@@ -84,8 +84,11 @@ const authSlice = createSlice({
       state.status = "loading";
     },
     [register.fulfilled]: (state, { payload }) => {
-      state.status = "succeeded ";
-      state.user = payload.data;
+      state.status = "succeeded";
+      state.message =
+        payload.status === 201
+          ? ` ${payload?.data?.username} register successfully`
+          : "Something went wrong";
     },
     [register.rejected]: (state, { payload }) => {
       state.status = "failed";
@@ -111,7 +114,7 @@ const authSlice = createSlice({
     },
   },
 });
-export const getUser = (state) => state.auth;
-export const getCurrentUser = (state) => state.auth.user;
+export const getUser = (state) => state?.auth;
+export const getCurrentUser = (state) => state?.auth?.user;
 export const { setLogout, reseter } = authSlice.actions;
 export default authSlice.reducer;

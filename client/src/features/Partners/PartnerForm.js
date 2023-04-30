@@ -33,7 +33,7 @@ const PartnerForm = () => {
 
   const dispatchFormData = () => {
     if (Object.keys(formErrors).length === 0 && isSubmit && status === "idle") {
-      dispatch(createPartners(patner));
+      dispatch(createPartners({ ...patner, image: String(patner.image) }));
       dispatch(reseter());
       setIsSubmit(false);
     }
@@ -53,6 +53,7 @@ const PartnerForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log("i was called");
     setFormErrors(validateEmpty(patner));
     setIsSubmit(true);
   };
@@ -60,8 +61,8 @@ const PartnerForm = () => {
   return (
     <div className="mb-5 pb-5">
       <Container className="mt-5 pt-5 mb-5">
-        <Row className="d-flex justify-content-center align-items-center">
-          <Col md={8} lg={6} xs={12}>
+        <Row className="">
+          <Col md={12} lg={12} xs={12}>
             <Card className="shadow">
               <Card.Body>
                 <div className="mb-3 mt-md-4">

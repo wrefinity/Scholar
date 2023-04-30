@@ -42,27 +42,32 @@ const ScholarCategory = () => {
 
   const dispatchCat = () => {
     reseter();
-    console.log(status);
     if (Object.keys(formErrors).length === 0 && isSubmit && status === "idle") {
-      dispatch(reseter());
       dispatch(createCategory(category));
-    } else if (
-      id &&
-      Object.keys(formErrors).length === 0 &&
-      isSubmit &&
-      status === "idle"
-    ) {
-      dispatch(updateCategories({ _id: id, ...category }));
+      dispatch(reseter());
+      setIsSubmit(false);
     }
+
+    // if (
+    //   id &&
+    //   Object.keys(formErrors).length === 0 &&
+    //   isSubmit &&
+    //   status === "idle"
+    // ) {
+    //   dispatch(updateCategories({ _id: id, ...category }));
+    //   setIsSubmit(false);
+    // }
 
     if (status === "succeeded") {
       toast.success("Operation Successful", { autoClose: 2000 });
       reset();
       dispatch(reseter());
+      setIsSubmit(false);
     }
     if (message === "failed") {
       toast.error(message, { autoClose: 4000 });
       dispatch(reseter());
+      setIsSubmit(false);
     }
   };
   referal.current = dispatchCat;
@@ -89,6 +94,7 @@ const ScholarCategory = () => {
                   <div className="mb-3">
                     <Form onSubmit={handleSubmit}>
                       <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <p className="text-danger">{formErrors?.all}</p>
                         <Form.Label className="text-center">
                           Scholarship name
                         </Form.Label>
@@ -100,8 +106,6 @@ const ScholarCategory = () => {
                           onChange={(e) => handleInput(e, setCategory)}
                         />
                       </Form.Group>
-                      <p className="text-danger">{formErrors?.name}</p>
-
                       <Form.Group
                         className="mb-3"
                         controlId="exampleForm.ControlTextarea1"
@@ -113,7 +117,7 @@ const ScholarCategory = () => {
                           onChange={(e) => handleInput(e, setCategory)}
                         />
                       </Form.Group>
-                      <p className="text-danger">{formErrors?.amount}</p>
+
                       <Form.Group
                         className="mb-3"
                         controlId="exampleForm.ControlTextarea111"
@@ -133,7 +137,7 @@ const ScholarCategory = () => {
                         </Form.Select>
                       </Form.Group>
                       <div className="d-grid mt-4">
-                        {status !== "loading" ? (
+                        {isSubmit !== "loading" ? (
                           <Button variant="primary" type="submit">
                             Submit
                           </Button>

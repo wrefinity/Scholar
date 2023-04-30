@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { handleInput, validate } from "../../Utils/InputHelpers";
 import { register, reseter } from "../../Slicer/Auth";
 const SignUp = () => {
-  const { status, message } = useSelector((state) => state.auth);
+  const { status, message } = useSelector((state) => state?.auth);
   const [signupData, setSignup] = useState({
     email: "",
     fullname: "",
@@ -35,25 +35,24 @@ const SignUp = () => {
 
   const handleSignup = (e) => {
     e.preventDefault();
-    console.log(signupData);
     setFormErrors(validate(signupData));
     setIsSubmit(true);
   };
 
   const dispatchSignup = () => {
     if (Object.keys(formErrors).length === 0 && isSubmit && status === "idle") {
-      register(signupData);
+      dispatch(register(signupData));
       setIsSubmit(false);
     }
 
     if (status === "succeeded") {
-      toast.success("register success", { autoClose: 2000 });
+      toast.success(message, { autoClose: 2000 });
       reset();
       dispatch(reseter());
       setIsSubmit(false);
       navigate("/login");
     }
-    if (status === "succeeded") {
+    if (status === "failed") {
       toast.error(message, { autoClose: 4000 });
       dispatch(reseter());
     }
@@ -88,7 +87,7 @@ const SignUp = () => {
                         />
                       </Form.Group>
                       <p className="text-danger">{formErrors?.fullname}</p>
-                      <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Group className="mb-3" controlId="formBasicXEmail">
                         <Form.Label className="text-center">
                           Username
                         </Form.Label>
@@ -101,7 +100,7 @@ const SignUp = () => {
                         />
                       </Form.Group>
                       <p className="text-danger">{formErrors?.username}</p>
-                      <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Group className="mb-3" controlId="formBasicXXEmail">
                         <Form.Label className="text-center">
                           Email address
                         </Form.Label>
@@ -117,7 +116,7 @@ const SignUp = () => {
 
                       <Form.Group
                         className="mb-3"
-                        controlId="formBasicPassword"
+                        controlId="formBasicXXPassword"
                       >
                         <Form.Label>Password</Form.Label>
                         <Form.Control
@@ -152,7 +151,7 @@ const SignUp = () => {
                         controlId="formBasicCheckbox"
                       ></Form.Group>
                       <div className="d-grid">
-                        {status !== "loading" ? (
+                        {status === "loading" ? (
                           ""
                         ) : (
                           <Button variant="primary" type="submit">

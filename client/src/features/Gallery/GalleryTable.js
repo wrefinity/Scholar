@@ -14,22 +14,22 @@ const GalleryTable = () => {
     : galleries.map((gal) => {
         return (
           <tr>
-            <td>{moment(gal.createdAt).format("DD/MM/YYYY")}</td>
+            <td>{moment(gal?.ReactcreatedAt).format("DD/MM/YYYY")}</td>
             <td>
               <img
-                src={`${gal.image}`}
+                src={`${gal?.image}`}
                 alt=""
                 style={{ width: "100px", height: "100px" }}
                 className="rounded-circle"
               />
             </td>
-            <td>{gal.content}</td>
-            <td>{gal.title}</td>
+            <td>{gal?.content}</td>
+            <td>{gal?.title}</td>
             <td>
               <button
                 className="btn btn-sm btn-danger m-1 mb-1"
                 onClick={() => {
-                  handleDelete(gal._id);
+                  handleDelete(gal?._id);
                 }}
               >
                 delete

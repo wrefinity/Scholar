@@ -8,7 +8,7 @@ import {
   validateEmpty,
 } from "../../Utils/InputHelpers";
 import { FileInput } from "../../Utils/FileInput";
-import { createScholarsPost, reseter } from "../../Slicer/Post";
+import { createScholarship, reseter } from "../../Slicer/ScholarApply";
 
 const ScholarApply = () => {
   const [scholar, setScholar] = useState({
@@ -70,7 +70,7 @@ const ScholarApply = () => {
   const addScholar = async () => {
     if (Object.keys(formErrors).length === 0 && status === "idle" && isSubmit) {
       dispatch(reseter());
-      dispatch(createScholarsPost(scholar));
+      dispatch(createScholarship(scholar));
     }
 
     if (status === "succeeded") {

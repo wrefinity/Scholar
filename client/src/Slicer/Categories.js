@@ -70,7 +70,7 @@ export const updateCategories = createAsyncThunk(
     }
   }
 );
-const deleteCategories = createAsyncThunk(
+export const deleteCategories = createAsyncThunk(
   "categories/delete",
   async (credentials, thunkAPI) => {
     try {
@@ -107,7 +107,7 @@ const categorySlice = createSlice({
     },
     [createCategory.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.categories.push(payload.data);
+      state.categories.push(payload);
     },
     [createCategory.rejected]: (state, { payload }) => {
       state.status = "failed";
@@ -118,7 +118,7 @@ const categorySlice = createSlice({
     },
     [getCategories.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.categories = payload.data;
+      state.categories = payload;
       state.status = "idle";
     },
     [getCategories.rejected]: (state, { payload }) => {
@@ -151,17 +151,18 @@ const categorySlice = createSlice({
     },
     [deleteCategories.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      const { _id } = payload.data;
+      const { _id } = payload;
       state.categories = state.categories.filter((cat) => cat._id !== _id);
+      state.message = "deletion sucessful";
     },
   },
 });
 
-export const selectAllCategories = (state) => state.categories.categories;
-export const getCategoriesStatus = (state) => state.categories.status;
-export const getCategoriesMessage = (state) => state.categories.message;
+export const selectAllCategories = (state) => state?.categories?.categories;
+export const getCategoriesStatus = (state) => state?.categories?.status;
+export const getCategoriesMessage = (state) => state?.categories?.message;
 export const getCategoriesById = (state, id) =>
-  state.categories.categories.find((cat) => cat._id === id);
+  state.categories.categories.find((cat) => cat?._id === id);
 export const { reseter } = categorySlice.actions;
 
 export default categorySlice.reducer;

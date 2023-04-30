@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FlutterWaveButton, closePaymentModal } from "flutterwave-react-v3";
-import { getUser } from "../../Slicer/Auth";
+import { getUser } from "./Slicer/Auth";
 import { createPayments, reseter as resetPayment } from "./Slicer/payment";
 import {
   createScholarship,
@@ -18,18 +18,17 @@ export default function FlutterWavePayment({ scholarship, reset, reseter }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { email, amount, phoneNo, country, state, city, zip, fullname } =
-    scholarship;
+  const { email, amount } = scholarship;
 
   const config = {
-    public_key: process.env.publicId,
+    public_key: publicId,
     tx_ref: Date.now(),
     amount: amount,
-    currency: "NGN",
+    currency: "NG",
     payment_options: "card, mobilemoney, ussd",
     customer: {
       email: email,
-      phone_number: phoneNo,
+      phone_number: user.phone,
       name: user.fullname,
     },
     customizations: {
@@ -46,10 +45,11 @@ export default function FlutterWavePayment({ scholarship, reset, reseter }) {
       console.log(response);
       if (response.status === "successful") {
         dispatch(
-          createPayments(
-            { ...payment, reference: response.transaction_id, amount },
-            user.token
-          )
+          createPayments({
+            ...scholarship,
+            reference: response.transaction_id,
+            amount,
+          })
         );
         dispatch(createScholarship({ ...scholarship, userId: user?._id }));
         reset();

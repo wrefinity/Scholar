@@ -86,11 +86,11 @@ const paymentSlice = createSlice({
 });
 
 const { reducer, actions } = paymentSlice;
-export const sellectAllPayments = (state) => state.payments.payments;
-export const getPaymentStatus = (state) => state.payments.status;
-export const getPaymentError = (state) => state.payments.message;
+export const sellectAllPayments = (state) => state?.payments?.payments;
+export const getPaymentStatus = (state) => state?.payments?.status;
+export const getPaymentError = (state) => state?.payments?.message;
 export const getPaymentById = (state, id) =>
-  state.payments.payments.find((pay) => pay._id === id);
+  state.payments.payments.find((pay) => pay?._id === id);
 
 export const { reseter } = actions;
 export default reducer;

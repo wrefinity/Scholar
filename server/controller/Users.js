@@ -107,6 +107,7 @@ class UserRepo {
   //    registration sections
   regPost = asyncHandler(async (req, res) => {
     const { email } = req.body;
+    console.log(" i was called");
     const existance = await User.findOne({ email });
     if (existance) {
       throw new CustomError.BadRequestError("Email already exists");

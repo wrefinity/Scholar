@@ -30,6 +30,8 @@
     "react-router-redux": "^4.0.8",
     "react-scripts": "5.0.1",
     "react-toastify": "^9.1.1",
+    "swagger-jsdoc": "^6.0.0",
+    "swagger-ui-express": "^4.6.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

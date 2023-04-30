@@ -78,7 +78,7 @@ export const deletePartners = createAsyncThunk(
         ThunkAPI.getState().auth.user.token ??
         JSON.parse(localStorage.getItem("user")).token;
       const res = requestHandler.axioDeleteHeader(
-        `${API_URL}/${credentials._id}`,
+        `${API_URL}/${credentials}`,
         token
       );
       return res?.data;
@@ -105,24 +105,25 @@ const partnersSlice = createSlice({
     [createPartners.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
       state.partners.push(payload);
+      state.message = "partner created";
     },
     [createPartners.rejected]: (state, { payload }) => {
       state.status = "failed";
-      state.message = payload.data;
+      state.message = payload;
     },
     [getPartners.pending]: (state) => {
       state.status = "loading";
     },
     [getPartners.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.partners = payload.data;
+      state.partners = payload;
       state.status = "idle";
     },
     [getPartners.rejected]: (state, { payload }) => {
       state.status = "failed";
       state.message = payload.message;
     },
-    //deletecase
+    // deletecase
     [deletePartners.pending]: (state) => {
       state.status = "loading";
     },
@@ -132,15 +133,16 @@ const partnersSlice = createSlice({
     },
     [deletePartners.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.partners = state.partners.filter((s) => s._id !== payload._id);
+      state.partners = state.partners.filter((s) => s._id !== payload?._id);
+      state.message = "partner deleted";
     },
   },
 });
 
 const { reducer, actions } = partnersSlice;
-export const selectAllPatners = (state) => state.partners.partners;
-export const getPatnerStatus = (state) => state.partners.status;
-export const getPatnerError = (state) => state.partners.message;
+export const selectAllPatners = (state) => state.partners?.partners;
+export const getPatnerStatus = (state) => state?.partners?.status;
+export const getPatnerError = (state) => state?.partners?.message;
 export const getPatnerById = (state, id) =>
   state.partners.partners.find((pat) => pat._id === id);
 

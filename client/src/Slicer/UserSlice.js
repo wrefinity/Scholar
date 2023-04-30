@@ -4,7 +4,7 @@ const API_URL = "users";
 
 const initialState = {
   users: [],
-  status:"idle",
+  status: "idle",
   message: "",
 };
 
@@ -15,7 +15,7 @@ export const getUsers = createAsyncThunk(
       const token =
         ThunkAPI.getState().auth.user.token ??
         JSON.parse(localStorage.getItem("user")).token;
-      return await requestHandler.axioGetHeader(`${API_URL}/register`, token);
+      return await requestHandler.axioGetHeader(`${API_URL}`, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -80,47 +80,47 @@ const userSlice = createSlice({
       state.message = "";
     },
   },
-  extraReducers:  {
+  extraReducers: {
     [getUsers.pending]: (state) => {
-        state.status = "loading";
-      },
-      [getUsers.fulfilled]: (state, { payload }) => {
-        state.status = "succeeded";
-        state.users = payload.data;
-        state.status = "idle";
-      },
-      [getUsers.rejected]: (state, { payload }) => {
-        state.status = "failed";
-        state.message = payload;
-        state.status = "idle";
-      },
-      //update case
-      [updateUser.pending]: (state) => {
-        state.status = "loading";
-      },
-      [updateUser.rejected]: (state, { payload }) => {
-        state.status = "failed";
-        state.mesage = payload;
-      },
-      [updateUser.fulfilled]: (state, { payload }) => {
-        state.status = "succeeded";
-        state.users.map((s) => (payload.data._id === s._id ? payload.data : s));
-      },
-      //deletecase
-      [deleteUser.pending]: (state) => {
-        state.status = "loading";
-      },
-      [deleteUser.rejected]: (state, { payload }) => {
-        state.status = "failed";
-        state.message = payload;
-      },
-      [deleteUser.fulfilled]: (state, { payload }) => {
-        state.status = "suceeded";
-        state.users.filter((us) => us._id !== payload.data._id);
-      }
+      state.status = "loading";
+    },
+    [getUsers.fulfilled]: (state, { payload }) => {
+      state.status = "succeeded";
+      state.users = payload.data;
+      state.status = "idle";
+    },
+    [getUsers.rejected]: (state, { payload }) => {
+      state.status = "failed";
+      state.message = payload;
+      state.status = "idle";
+    },
+    //update case
+    [updateUser.pending]: (state) => {
+      state.status = "loading";
+    },
+    [updateUser.rejected]: (state, { payload }) => {
+      state.status = "failed";
+      state.mesage = payload;
+    },
+    [updateUser.fulfilled]: (state, { payload }) => {
+      state.status = "succeeded";
+      state.users.map((s) => (payload.data._id === s._id ? payload.data : s));
+    },
+    //deletecase
+    [deleteUser.pending]: (state) => {
+      state.status = "loading";
+    },
+    [deleteUser.rejected]: (state, { payload }) => {
+      state.status = "failed";
+      state.message = payload;
+    },
+    [deleteUser.fulfilled]: (state, { payload }) => {
+      state.status = "suceeded";
+      state.users.filter((us) => us._id !== payload.data._id);
+    },
   },
 });
-export const fetchUsers = (state) => state.users.users;
+export const fetchUsers = (state) => state?.users?.users;
 export const getUsersById = (state, id) =>
   state.users.users.find((c) => c.id === id);
 export const { reseter } = userSlice.actions;

@@ -4,10 +4,14 @@ import { GalleryCard } from "./GalleryCard";
 import projImg1 from "../../assets/img/project-img1.png";
 import projImg2 from "../../assets/img/project-img2.png";
 import projImg3 from "../../assets/img/project-img3.png";
-import colorSharp2 from "../../assets/img/color-sharp2.png";
+// import colorSharp2 from "../../assets/img/color-sharp2.png";
 import TrackVisibility from "react-on-screen";
+import { useSelector } from "react-redux";
+import { selectAllGalleries} from "../../Slicer/Gallery";
+import moment from "moment";
 
 const GalleryList = () => {
+  const galleries = useSelector(selectAllGalleries);
   const projects = [
     {
       title: "Business Startup",
@@ -53,8 +57,9 @@ const GalleryList = () => {
                     isVisible ? "animate__animated animate__fadeIn" : ""
                   }
                 >
-                  <h2>Gallery</h2>
+                  <h3 className="cus_txt_color fw-500 text-center">GALLERY</h3>
                   <p>Take a tour of our gallery</p>
+
                   <Tab.Container id="projects-tabs" defaultActiveKey="first">
                     <Nav
                       variant="pills"
@@ -79,7 +84,7 @@ const GalleryList = () => {
                     >
                       <Tab.Pane eventKey="first">
                         <Row>
-                          {projects.map((project, index) => {
+                          {galleries.map((project, index) => {
                             return <GalleryCard key={index} {...project} />;
                           })}
                         </Row>
@@ -110,7 +115,7 @@ const GalleryList = () => {
           </Col>
         </Row>
       </Container>
-      <img className="background-image-right" src={colorSharp2}></img>
+      {/* <img className="background-image-right" src={colorSharp2}></img> */}
     </section>
   );
 };

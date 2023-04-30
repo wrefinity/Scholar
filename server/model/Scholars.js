@@ -7,11 +7,11 @@ const scholarItem = new Mongoose.Schema(
       ref: "Post",
       required: true,
     },
-    userId: {
-      type: Mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+    // userId: {
+    //   type: Mongoose.Schema.Types.ObjectId,
+    //   ref: "User",
+    //   required: true,
+    // },
     // personal information
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },
@@ -29,9 +29,10 @@ const scholarItem = new Mongoose.Schema(
       ref: "Category",
       required: true,
     },
-    scholarName: {
+    scholarLevel: {
       type: Mongoose.Schema.Types.ObjectId,
       ref: "Type",
+      required: true,
     },
     isDeleted: { type: Boolean, default: false },
     idCard: { type: String },
@@ -50,6 +51,7 @@ const scholarSchema = new Mongoose.Schema({
     unique: true,
     required: true,
   },
+  isDeleted: { type: Boolean, default: false },
   scholarships: [scholarItem],
 });
 

@@ -4,20 +4,28 @@ import Mongoose from "mongoose";
 const postSchema = new Mongoose.Schema(
   {
     image: { type: String },
-    benefit: { graduate: String, underGraduate: String, postGraduate: String },
+    // benefit: { graduate: String, underGraduate: String, postGraduate: String },
+    benefit: {
+      type: Mongoose.Schema.Types.Mixed,
+      default: {},
+    },
     body: { type: String, required: true },
     categoryId: {
       type: Mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: true,
     },
+    // eligibility: [{
+    //   eligibilityPre: String,
+    //   eligibilityUnder: String,
+    //   eligibilityPost: String,
+    // }],
     eligibility: {
-      graduate: String,
-      underGraduate: String,
-      postGraduate: String,
+      type: Mongoose.Schema.Types.Mixed,
+      default: {},
     },
     isDeleted: { type: Boolean, default: false },
-    eligible_country: { type: Array, default: [], required: true },
+    eligible_country: { type: [String], default: [], required: true },
     country: { type: String, required: true },
     host: { type: String, required: true },
     deadline: { type: String, required: true },

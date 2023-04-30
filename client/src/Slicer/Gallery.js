@@ -112,7 +112,8 @@ const gallerySlice = createSlice({
     },
     [createGallery.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.galleries.push(payload.data);
+      state.galleries.push(payload);
+      state.message = "record added";
     },
     [createGallery.rejected]: (state, { payload }) => {
       state.status = "failed";
@@ -161,9 +162,9 @@ const gallerySlice = createSlice({
 });
 
 const { actions, reducer } = gallerySlice;
-export const selectAllGalleries = (state) => state.galleries.galleries;
-export const getGalleryStatus = (state) => state.galleries.status;
-export const getGalleryError = (state) => state.galleries.message;
+export const selectAllGalleries = (state) => state?.galleries?.galleries;
+export const getGalleryStatus = (state) => state?.galleries?.status;
+export const getGalleryError = (state) => state?.galleries?.message;
 export const getGalleryById = (state, id) =>
   state.galleries.galleries.find((gal) => gal._id === id);
 export const { reseter } = actions;

@@ -26,3 +26,7 @@ npm run dev
 cd client && npm install
 npm start
 ```
+
+## Resources
+
+[Populate function] (https://dev.to/paras594/how-to-use-populate-in-mongoose-node-js-mo0)

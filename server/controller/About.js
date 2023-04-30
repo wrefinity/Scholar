@@ -7,11 +7,8 @@ import ModelActions from "./ModelActions.js";
 
 class AboutRepo {
   createAbout = asyncHandler(async (req, res) => {
-    if (!req.body) {
-      throw new CustomError.BadRequestError(
-        "Please provide the necessary values"
-      );
-    }
+    if (!req.body)
+    return res.status(400).json({message:"please supply the note field"})
     const data = await ModelActions.creator(About, req.body);
     data && res.status(StatusCodes.CREATED).json(data);
   });
@@ -44,7 +41,8 @@ class AboutRepo {
   });
 
   allAbout = asyncHandler(async (_, res) => {
-    const data = await ModelActions.findAll(About);
+    const data = await About.find().sort({ createdAt: -1 }).limit(1)  
+    // const data = await ModelActions.findAll(About);
     data && res.status(StatusCodes.OK).json(data);
   });
 

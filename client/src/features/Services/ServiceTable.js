@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Row } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { selectAllServices, deleteServices } from "../../Slicer/Service";
 import moment from "moment";
@@ -25,7 +25,7 @@ const ServiceTable = () => {
             </td>
             <td>{ser.title}</td>
             <td>{ser.content}</td>
-            <td scope="col">
+            <td>
               <button
                 className="btn btn-sm btn-danger m-1 mb-1"
                 onClick={() => {

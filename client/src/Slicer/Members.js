@@ -108,7 +108,7 @@ const membersSlice = createSlice({
     },
     [createMembers.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.members.push(payload.data);
+      state.members.push(payload);
     },
     [createMembers.rejected]: (state, { payload }) => {
       state.status = "failed";
@@ -151,18 +151,16 @@ const membersSlice = createSlice({
     },
     [deleteMembers.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.members = state.members.filter(
-        (mem) => mem._id !== payload?.data._id
-      );
+      state.members = state.members.filter((mem) => mem._id !== payload?._id);
       state.message = "deletion successful";
     },
   },
 });
 
 const { reducer, actions } = membersSlice;
-export const selectAllMembers = (state) => state.members.members;
-export const getMemberStatus = (state) => state.members.status;
-export const getMemberError = (state) => state.members.message;
+export const selectAllMembers = (state) => state?.members?.members;
+export const getMemberStatus = (state) => state?.members?.status;
+export const getMemberError = (state) => state?.members?.message;
 export const getMemberById = (state, id) =>
   state.members.members.find((mem) => mem._id === id);
 

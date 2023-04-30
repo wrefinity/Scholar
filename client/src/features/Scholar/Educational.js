@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { selectAllCategories } from "../../Slicer/Categories";
+import { selectAllTypes } from "../../Slicer/Types";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
-import PaymentOptions from "../PaymentOptions/PaymentOptions";
+import ScholarPayment from "./ScholarPayment";
 import { validateEmpty } from "../../Utils/InputHelpers";
 import { toast } from "react-toastify";
 const Educational = ({
@@ -20,8 +21,39 @@ const Educational = ({
 }) => {
   const [submitted, setSubmitted] = useState(false);
   const categories = useSelector(selectAllCategories);
+  const all_types = useSelector(selectAllTypes);
   const [formErrors, setFormErrors] = useState({});
-  const [isSubmit, setIsSubmit] = useState(false);
+  const [checker, setChecker] = useState({
+    signature: "",
+    passport: "",
+    idCard: "",
+    letter: "",
+    result: "",
+    scholarType: "",
+    scholarLevel: "",
+  });
+
+  const checkerReset = () => {
+    setChecker({
+      signature: "",
+      passport: "",
+      idCard: "",
+      letter: "",
+      result: "",
+      scholarType: "",
+      scholarLevel: "",
+    });
+  };
+
+  const checkVals = [
+    "signature",
+    "letter",
+    "idCard",
+    "passport",
+    "result",
+    "scholarType",
+    "scholarLevel",
+  ];
 
   const categoriesOption = !categories
     ? ""
@@ -38,13 +70,43 @@ const Educational = ({
             </option>
           );
         });
+  const TypesOption = !all_types
+    ? ""
+    : Array.from(all_types)
+        .sort((a, b) => {
+          if (a.name < b.name) return -1;
+          if (a.name > b.name) return 1;
+          return 0;
+        })
+        .map((cat) => {
+          return (
+            <option key={cat._id} value={cat._id}>
+              {cat.name}
+            </option>
+          );
+        });
 
-  const handleSubmited = () => {
-    setFormErrors(validateEmpty(scholar));
+  const handleSubmited = (e) => {
+    e.preventDefault();
+    checkerReset();
+    for (const x of checkVals) {
+      if (scholar[x] === "" || scholar[x] === null) {
+        checker[x] = `${x} required`;
+        toast.error(checker[x], { autoClose: 4000 });
+      }
+    }
+    // setFormErrors(validateEmpty(scholar));
+    const check_sta = Object.values(checker).every(
+      (x) => x === null || x === ""
+    );
+    console.warn(check_sta);
+    if (check_sta) {
+      setSubmitted(true);
+    }
 
-    if (validateEmpty(scholar))
-      if (Object.keys(formErrors).length === 0) setSubmitted(true);
-      else toast.error(`${formError.all}`, { autoClose: 2000 });
+    // if (validateEmpty(scholar))
+    //   if (Object.keys(formErrors).length === 0) setSubmitted(true);
+    //   else toast.error(`${formErrors.all}`, { autoClose: 2000 });
   };
   return (
     <div className="mb-5 mt-5 pb-5">
@@ -67,7 +129,7 @@ const Educational = ({
                         </Form.Label>
                         <Form.Select
                           aria-label="Default select example"
-                          name="scholarName"
+                          name="scholarType"
                           value={scholar.scholarType}
                           onChange={(e) => handleInput(e, setScholar)}
                         >
@@ -81,12 +143,13 @@ const Educational = ({
                         </Form.Label>
                         <Form.Select
                           aria-label="Default select example"
-                          name="scholarType"
+                          name="scholarLevel"
                           required
-                          value={scholar.scholarType}
+                          value={scholar.scholarLevel}
                           onChange={(e) => handleInput(e, setScholar)}
                         >
                           <option>select scholarship level </option>
+                          {TypesOption}
                         </Form.Select>
                       </Form.Group>
                     </Row>
@@ -160,7 +223,7 @@ const Educational = ({
                     </Button>
                     <Button onClick={handleSubmited}>Submit </Button>
                     {submitted && (
-                      <PaymentOptions
+                      <ScholarPayment
                         scholarship={scholar}
                         reset={reset}
                         reseter={reseter}

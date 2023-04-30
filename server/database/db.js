@@ -1,27 +1,35 @@
+import dotenv from "dotenv";
 import mongoose from "mongoose";
 import User from "../model/Users.js";
-import asyncHandler from "express-async-handler";
+dotenv.config();
 
-export default asyncHandler(async () => {
+let Mongo = "";
+{
+  process.env.isProduction == "true"
+    ? (Mongo = process.env.MONGO_PROD_URI)
+    : (Mongo = process.env.MONGO_DEV_URI);
+}
+
+export default async () => {
   await mongoose
-    .connect(process.env.MONGO_URI, {
+    .connect(Mongo, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
     .then(async (res) => {
       console.log("database connected");
-      const admin = await User.findOne({ role: "admin" });
+      const admin = await User.findOne({ isAdmin: true });
       if (!admin) {
         await User.create({
           fullname: process.env.FULL_NAME,
           email: process.env.ADMIN_EMAIL,
-          role: process.env.ADMIN_ROLE,
+          isAdmin: true,
           password: process.env.ADMIN_PASSWORD,
-          isAdmin: true
         });
       }
     })
     .catch((err) => {
       console.log(err.message);
     });
-});
+};
+mongoose.set("strictQuery", true);

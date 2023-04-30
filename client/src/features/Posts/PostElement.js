@@ -1,18 +1,17 @@
 import React from "react";
-import PostReaction from "./PostReaction";
 import TimeAgo from "../TimeAgo";
 import { Link } from "react-router-dom";
 
 const PostElement = ({ post }) => {
+  console.log(post);
   return (
     <Link to={`/user/${post.id}`}>
       <article>
         <h3>{post.title}</h3>
-        <p>{post.content.substring(0, 100)} ...</p>
+        <p>{post.body.substring(0, 100)} ...</p>
         <p>
-          <TimeAgo timestamp={posts.date} />
+          <TimeAgo timestamp={post.createdAt} />
         </p>
-        <PostReaction post={post} />
       </article>
     </Link>
   );
