@@ -53,7 +53,6 @@ const PartnerForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("i was called");
     setFormErrors(validateEmpty(patner));
     setIsSubmit(true);
   };

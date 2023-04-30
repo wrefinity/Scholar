@@ -17,15 +17,6 @@ export const ServiceCard = ({ title, content, image }) => {
         </Card.Body>
       </Card>
     </Col>
-    // <Col size={12} sm={6} md={4}>
-    //   <div className="proj-imgbx mt-5 ">
-    //     <img src={image} />
-    //     <div className="proj-txtx text-white">
-    //       <h4>{title}</h4>
-    //       <span>{content}</span>
-    //     </div>
-    //   </div>
-    // </Col>
   );
 };
 

@@ -84,7 +84,7 @@ export const deleteServices = createAsyncThunk(
         ThunkAPI.getState().auth.user.token ??
         JSON.parse(localStorage.getItem("user")).token;
       const res = await requestHandler.axioDeleteHeader(
-        `${API_URL}/${credentials._id}`,
+        `${API_URL}/${credentials}`,
         token
       );
       return res?.data;

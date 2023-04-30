@@ -42,7 +42,6 @@ export default function FlutterWavePayment({ scholarship, reset, reseter }) {
     ...config,
     text: "Pay with Flutterwave!",
     callback: (response) => {
-      console.log(response);
       if (response.status === "successful") {
         dispatch(
           createPayments({

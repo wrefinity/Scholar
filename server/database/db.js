@@ -17,7 +17,7 @@ export default async () => {
       useUnifiedTopology: true,
     })
     .then(async (res) => {
-      console.log("database connected");
+      console.log("databse connected");
       const admin = await User.findOne({ isAdmin: true });
       if (!admin) {
         await User.create({
@@ -28,8 +28,6 @@ export default async () => {
         });
       }
     })
-    .catch((err) => {
-      console.log(err.message);
-    });
+    .catch((err) => {});
 };
 mongoose.set("strictQuery", true);

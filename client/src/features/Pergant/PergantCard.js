@@ -11,7 +11,7 @@ export const PergantCard = ({ _id, title, payments, name, image }) => {
             <p className="text-align-center text-white">{payments}</p>
             <p className="text-align-center text-white">{title?.name}</p>
           </Row>
-          <img src={image} />
+          <img src={image} className="max-img" />
           <div className="proj-txtx text-white">
             <h4>{name}</h4>
             <span>{title?.amount}</span>

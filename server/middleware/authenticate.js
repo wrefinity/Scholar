@@ -36,7 +36,6 @@ export const verifyTokenAndRoles = (req, res, next) => {
 
 export const verifyTokenAndAdmin = (req, res, next) => {
   checkUser(req, res, () => {
-    console.log(req.user)
     if (req.user?.role === process.env.ADMIN_ROLE) {
       next();
     } else {

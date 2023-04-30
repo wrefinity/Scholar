@@ -8,22 +8,26 @@ import ModelActions from "./ModelActions.js";
 class ServiceRepo {
   createService = asyncHandler(async (req, res) => {
     if (!req.body) {
-      throw new CustomError.BadRequestError(
-        "Please provide the necessary values"
-      );
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Please provide the necessary values" });
     }
-    const data = await ModelActions.creator(Services, req.body);
-    data && res.status(StatusCodes.CREATED).json(data);
+    try {
+      const data = await ModelActions.creator(Services, req.body);
+      data && res.status(StatusCodes.CREATED).json(data);
+    } catch (error) {
+      res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+    }
   });
 
   updateService = asyncHandler(async (req, res) => {
     if (!req.body) {
-      throw new CustomError.BadRequestError(
-        "Please provide the necessary values"
-      );
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Please provide the necessary values" });
     }
     const { id } = req.params;
-    checkId(id);
+    checkId(res, id);
     const match = await ModelActions.findOne(Services, { _id: id });
     if (!match) {
       throw new CustomError.NotFoundRequestError(`No service with id : ${id}`);
@@ -34,10 +38,14 @@ class ServiceRepo {
 
   deleteService = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    checkId(id);
+    checkId(res, id);
+    console.log(id);
     const match = await ModelActions.findOne(Services, { _id: id });
-    if (!match)
-      throw new CustomError.NotFoundRequestError(`No service with id : ${id}`);
+    if (!match) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: `No service with id : ${id}` });
+    }
     const deleted = await ModelActions.deletor(Services, id);
     deleted && res.status(StatusCodes.OK).json(deleted);
   });
@@ -49,10 +57,12 @@ class ServiceRepo {
 
   singleService = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    checkId(id);
+    checkId(res, id);
     const data = await ModelActions.findId(Services, id);
     if (!data) {
-      throw new CustomError.NotFoundRequestError(`No service with id : ${id}`);
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: `No service with id : ${id}` });
     }
     res.status(StatusCodes.OK).json(data);
   });

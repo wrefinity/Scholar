@@ -1,27 +1,28 @@
 import JWTAuthentication from "./authentication.js";
-import CustomError from "../error/index.js";
 import User from "../model/Users.js";
+import StatusCodes from "http-status-codes";
 
 class AuthRoles {
   currentRole = "";
   Authenticate = async (req, res, next) => {
-    console.log(req);
     const authHeaders = req.headers.authorization;
     if (!authHeaders)
-      throw new CustomError.UnauthenticatedError(
-        "Authorization Token Required"
-      );
+      res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ message: "Authorization Token Required" });
     try {
       const token = authHeaders.split(" ")[1].toString();
-      console.log(token);
       if (!token) {
-        throw new CustomError.UnauthenticatedError("Authentication Invalid");
+        res
+          .status(StatusCodes.UNAUTHORIZED)
+          .json({ message: "Invalid Authentication Token" });
       }
       let decoded = JWTAuthentication.isTokenValid(token);
       const user = await User.findById(decoded.id.toString()).select(
         "-password"
       );
-      if (!user) throw new CustomError.BadRequestError("No found found");
+      if (!user)
+        res.status(StatusCodes.UNAUTHORIZED)({ message: "No found found" });
       this.currentRole = user.isAdmin;
       req.user = user;
       next();
@@ -31,26 +32,25 @@ class AuthRoles {
           message: "Your token is expired!",
         });
       } else {
-        console.log("printing error");
-        console.log(error);
-        throw new CustomError.UnauthenticatedError("Not authorized");
+        res
+          .status(StatusCodes.UNAUTHORIZED)
+          .json({ message: "Not authorized" });
       }
     }
   };
   authorizeAdmin = (req, res, next) => {
-    console.log(this.currentRole);
     if (!req.user.isAdmin) {
-      throw new CustomError.UnauthorizedError(
-        "Unauthorized to access this route"
-      );
+      res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ message: "Unauthorized to access this route" });
     }
     next();
   };
   authorizeStudent = (req, res, next) => {
     if (!req.user.role === process.env.STUDENT_ROLE) {
-      throw new CustomError.UnauthorizedError(
-        "Unauthorized to access this route"
-      );
+      res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ message: "Unauthorized to access this route" });
     }
     next();
   };
@@ -59,9 +59,9 @@ class AuthRoles {
       !req.user.role === process.env.STUDENT_ROLE ||
       !req.user.role === process.env.ADMIN_ROLE
     ) {
-      throw new CustomError.UnauthorizedError(
-        "Unauthorized to access this route"
-      );
+      res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ message: "Unauthorized to access this route" });
     }
     next();
   };

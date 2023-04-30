@@ -63,7 +63,6 @@ export default function PergentPayment() {
     ...config,
     text: "Pay with Flutterwave!",
     callback: (response) => {
-      console.log(response);
       if (response.status === "successful") {
         handleSuccessAction(response);
       }

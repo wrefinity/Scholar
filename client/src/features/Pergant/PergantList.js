@@ -7,8 +7,6 @@ import { sellectAllPergants } from "../../Slicer/Pergent";
 
 const GalleryList = () => {
   const pergants = useSelector(sellectAllPergants);
-  console.log("The pergants");
-
   return (
     <section className="project mt-5" id="project">
       <Container>
@@ -19,7 +17,6 @@ const GalleryList = () => {
           <Col size={12}>
             <Row>
               {pergants?.map((pergant, index) => {
-                console.log(pergant);
                 return <PergantCard key={index} {...pergant} />;
               })}
             </Row>

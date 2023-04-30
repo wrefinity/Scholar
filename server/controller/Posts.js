@@ -2,16 +2,14 @@ import Post from "../model/Posts.js";
 import asyncHandler from "express-async-handler";
 import StatusCodes from "http-status-codes";
 import checkId from "../Utils/mongoIdCheck.js";
-import CustomError from "../error/index.js";
 import ModelActions from "./ModelActions.js";
 
 class PostRepo {
   createPost = asyncHandler(async (req, res) => {
-    if (!req.body) {
-      throw new CustomError.BadRequestError(
-        "Please provide the necessary values"
-      );
-    }
+    if (!req.body)
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "provide necessary information" });
     const {
       benefitPre,
       benefitUnder,
@@ -31,16 +29,18 @@ class PostRepo {
   });
 
   updatePost = asyncHandler(async (req, res) => {
-    if (!req.body) {
-      throw new CustomError.BadRequestError(
-        "Please provide the necessary values"
-      );
-    }
+    if (!req.body)
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "provide necessary information" });
+
     const { id } = req.params;
-    checkId(id);
+    checkId(res, id);
     const match = await ModelActions.findOne(Post, { _id: id });
     if (!match) {
-      throw new CustomError.NotFoundRequestError(`No post with id : ${id}`);
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: `No post with id : ${id}` });
     }
     const {
       benefitPre,
@@ -65,17 +65,21 @@ class PostRepo {
   });
 
   deletePost = asyncHandler(async (req, res) => {
-    const { id } = req.params;
-    checkId(id);
-    const match = await ModelActions.findOne(Post, { _id: id });
-    if (!match) {
-      throw new CustomError.NotFoundRequestError(`No post with id : ${id}`);
-    }
-    const deleted = await ModelActions.deletor(Post, id);
-    deleted &&
-      res
-        .status(StatusCodes.OK)
-        .json({ data: deleted, message: "post deleted" });
+    try {
+      const { id } = req.params;
+      checkId(res, id);
+      const match = await ModelActions.findOne(Post, { _id: id });
+      if (!match)
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ message: `No post with id : ${id}` });
+
+      const deleted = await ModelActions.deletor(Post, id);
+      deleted &&
+        res
+          .status(StatusCodes.OK)
+          .json({ data: deleted, message: "post deleted" });
+    } catch (error) {}
   });
 
   allPosts = asyncHandler(async (req, res) => {
@@ -90,11 +94,13 @@ class PostRepo {
 
   singlePost = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    checkId(id);
+    checkId(res, id);
     const data = await ModelActions.findId(Post, id);
-    if (!data) {
-      throw new CustomError.NotFoundRequestError(`No post with id : ${id}`);
-    }
+    if (!data)
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: `No post with id : ${id}` });
+
     res.status(StatusCodes.OK).json(data);
   });
 }

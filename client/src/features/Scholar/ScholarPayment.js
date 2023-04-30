@@ -46,7 +46,6 @@ export default function ScholarPayment({ scholar }) {
     ...config,
     text: "Pay with Flutterwave!",
     callback: (response) => {
-      console.log(response);
       if (response.status === "successful") {
         handleSuccessAction(response);
       }

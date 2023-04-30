@@ -8,7 +8,7 @@ import ModelActions from "./ModelActions.js";
 class AboutRepo {
   createAbout = asyncHandler(async (req, res) => {
     if (!req.body)
-    return res.status(400).json({message:"please supply the note field"})
+      return res.status(400).json({ message: "please supply the note field" });
     const data = await ModelActions.creator(About, req.body);
     data && res.status(StatusCodes.CREATED).json(data);
   });
@@ -20,7 +20,7 @@ class AboutRepo {
       );
     }
     const { id } = req.params;
-    checkId(id);
+    checkId(res, id);
     const match = await ModelActions.findOne(About, { _id: id });
     if (!match) {
       throw new CustomError.NotFoundRequestError(`No About with id : ${id}`);
@@ -31,7 +31,7 @@ class AboutRepo {
 
   deleteAbout = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    checkId(id);
+    checkId(res, id);
     const match = await findOne(About, { _id: id });
     if (!match) {
       throw new CustomError.NotFoundRequestError(`No About with id : ${id}`);
@@ -41,18 +41,19 @@ class AboutRepo {
   });
 
   allAbout = asyncHandler(async (_, res) => {
-    const data = await About.find().sort({ createdAt: -1 }).limit(1)  
+    const data = await About.find().sort({ createdAt: -1 }).limit(1);
     // const data = await ModelActions.findAll(About);
     data && res.status(StatusCodes.OK).json(data);
   });
 
   singleAbout = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    checkId(id);
+    checkId(res, id);
     const data = await ModelActions.findId(About, id);
     if (!data) {
       throw new CustomError.NotFoundRequestError(`No About with id : ${id}`);
     }
+
     res.status(StatusCodes.OK).json(data);
   });
 }

@@ -9,9 +9,9 @@ class PergantRepo {
   // creating pergent
   createPergant = asyncHandler(async (req, res) => {
     if (!req.body)
-      throw new CustomError.BadRequestError(
-        "Please provide the necessary values"
-      );
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Please provide the necessary values" });
     const data = await ModelActions.creator(Pergant, req.body);
     data && res.status(StatusCodes.CREATED).json(data);
   });
@@ -23,34 +23,40 @@ class PergantRepo {
         "Please provide the necessary values"
       );
     const { id } = req.params;
-    checkId(id);
+    checkId(res, id);
     const match = await ModelActions.findOne(Pergant, { _id: id });
     if (!match)
-      throw new CustomError.NotFoundRequestError(`No Pergant with id : ${id}`);
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: `No Pergant with id : ${id}` });
     const updated = await ModelActions.updator(Pergant, id, req.body);
     updated && res.status(StatusCodes.OK).json(updated);
   });
   incrementPergant = async (req, res) => {
     const { pergantId } = req.params;
     const { name, counter } = req.body;
-    checkId(pergantId);
+    checkId(res, pergantId);
     const pergant = await Pergant.updateOne(
       { _id: pergantId },
       { $inc: { payments: counter }, $push: { voters: name } },
       { new: true }
     ).exec();
+
     if (!pergant)
-      throw new CustomError.NotFoundRequestError(`No Pergant with id : ${id}`);
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: `No Pergant with id : ${id}` });
     res.status(StatusCodes.OK).json(pergant);
   };
 
   deletePergant = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    console.log("i was called");
-    checkId(id);
+    checkId(res, id);
     const match = await ModelActions.findOne(Pergant, { _id: id });
     if (!match)
-      throw new CustomError.NotFoundRequestError(`No Pergant with id : ${id}`);
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: `No Pergant with id : ${id}` });
     const deleted = await ModelActions.deletor(Pergant, id);
     deleted && res.status(StatusCodes.OK).json(deleted);
   });
@@ -71,10 +77,12 @@ class PergantRepo {
   // get single pergant
   singlePergant = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    checkId(id);
+    checkId(res, id);
     const data = await ModelActions.findId(Pergant, id);
     if (!data)
-      throw new CustomError.NotFoundRequestError(`No Pergant with id : ${id}`);
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: `No Pergant with id : ${id}` });
     res.status(StatusCodes.OK).json(data);
   });
 }

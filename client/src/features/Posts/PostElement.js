@@ -3,7 +3,6 @@ import TimeAgo from "../TimeAgo";
 import { Link } from "react-router-dom";
 
 const PostElement = ({ post }) => {
-  console.log(post);
   return (
     <Link to={`/user/${post.id}`}>
       <article>

@@ -4,7 +4,6 @@ import bcrypt from "bcrypt";
 import StatusCodes from "http-status-codes";
 import checkId from "../Utils/mongoIdCheck.js";
 import asyncHandler from "express-async-handler";
-import CustomError from "../error/index.js";
 import User from "../model/Users.js";
 import ModelActions from "./ModelActions.js";
 const maxAge = 3 * 60 * 60 * 24;
@@ -19,10 +18,12 @@ class UserRepo {
   // delete a user
   deleteUsers = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    checkId(id);
+    checkId(res, id);
     const user = await ModelActions.findOne(User, { _id: id });
     if (!user)
-      throw new CustomError.NotFoundRequestError(`No user with id ${id}`);
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: `No user with id ${id}` });
     await user.remove();
     res.status(StatusCodes.OK).json({ message: "user deleted" });
   });
@@ -30,12 +31,12 @@ class UserRepo {
   // update a user
   updateUser = asyncHandler(async (req, res) => {
     if (!req.body) {
-      throw new CustomError.BadRequestError(
-        "Please provide the necessary values"
-      );
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: "Please provide the necessary values",
+      });
     }
     const { id: userId } = req.params;
-    checkId(userId);
+    checkId(res, userId);
     const updatedUser = await ModelActions.updator(User, id, req.body);
     res.status(StatusCodes.OK).json(updatedUser);
   });
@@ -51,11 +52,12 @@ class UserRepo {
   //get singleUser
   getUser = asyncHandler(async (req, res) => {
     const { id: userId } = req.params;
-    checkId(userId);
+    checkId(res, userId);
     const user = await User.findById(userId).select("-password");
-    if (!user) {
-      throw new CustomError.NotFoundRequestError(`No user with id : ${userId}`);
-    }
+    if (!user)
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: `No user with id ${id}` });
     res.status(StatusCodes.OK).json(user);
   });
 
@@ -78,9 +80,9 @@ class UserRepo {
   login_post = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
-      throw new CustomError.BadRequestError(
-        "Please provide email and password"
-      );
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Please provide email and password" });
     }
 
     const user = await User.compareDetails(email, password);
@@ -96,21 +98,22 @@ class UserRepo {
       secure: process.env.NODE_ENV === "production",
       signed: true,
     });
-    res.status(StatusCodes.OK).json({ ...user, token });
+    return res.status(StatusCodes.OK).json({ ...user, token });
   });
 
   logout = asyncHandler((req, res) => {
     res.cookie("authentication", "", { httpOnly: true, maxAge: 1 });
-    res.status(StatusCodes.OK).json({ message: "user logged out!" });
+    return res.status(StatusCodes.OK).json({ message: "user logged out!" });
   });
 
   //    registration sections
   regPost = asyncHandler(async (req, res) => {
     const { email } = req.body;
-    console.log(" i was called");
     const existance = await User.findOne({ email });
     if (existance) {
-      throw new CustomError.BadRequestError("Email already exists");
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Email already exists" });
     }
     const user = await User.create({ ...req.body });
     user && res.status(StatusCodes.CREATED).json(user);
@@ -120,17 +123,23 @@ class UserRepo {
   changePassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword, id } = req.body;
     if (!oldPassword || !newPassword) {
-      throw new CustomError.BadRequestError("Please provide both values");
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Please provide both values" });
     }
     if (oldPassword !== newPassword) {
-      throw new CustomError.BadRequestError("Password does not match");
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Password does not match" });
     }
 
     const user = await User.findById(id);
     if (user) {
       const isPasswordCorrect = await user.comparePassword(oldPassword);
       if (!isPasswordCorrect) {
-        throw new CustomError.UnauthenticatedError("Invalid Credentials");
+        return res
+          .status(StatusCodes.NOT_ACCEPTABLE)
+          .json({ message: "Invalid Credentials" });
       }
       const salt = await bcrypt.genSalt();
       user.password = await bcrypt.hash(newPassword, salt);
@@ -144,7 +153,7 @@ class UserRepo {
   changeImage = asyncHandler(async (req, res) => {
     const { image } = req.body;
     const { id: userId } = req.user;
-    checkId(userId);
+    checkId(res, userId);
     const user = await User.findByIdAndUpdate(
       userId,
       { $set: { image } },

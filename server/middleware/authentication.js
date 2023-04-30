@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 
 class JWTAuthentication {
   isTokenValid = (token) => {
-    console.log(token);
     return jwt.verify(token, process.env.JWT_SECRET);
   };
   generateToken = (payloads) => {

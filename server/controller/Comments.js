@@ -24,7 +24,7 @@ class CommentRepo{
       );
     }
     const { id } = req.params;
-    checkId(id);
+    checkId(res, id);
     const userId = req.user.id;
     const match = await ModelActions.findOne(Comment, { userId, _id: id });
     if (!match) {
@@ -36,7 +36,7 @@ class CommentRepo{
   
   deleteComment = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    checkId(id);
+    checkId(res, id);
     const userId = req.user.id;
     const match = await ModelActions.findOne(Comment, { userId, _id: id });
     if (!match)
@@ -52,7 +52,7 @@ class CommentRepo{
   
   singleComment = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    checkId(id)
+    checkId(res, id)
     const comments = await ModelActions.findId(Comment, id);
     comments && res.status(StatusCodes.OK).json(comments);
   });

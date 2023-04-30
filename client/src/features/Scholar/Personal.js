@@ -57,7 +57,6 @@ const Personal = ({
     }
     // setError(errors);
     const checker = Object.values(errorx).every((x) => x === null || x === "");
-    console.log(errorx);
     console.warn(checker);
     if (checker) {
       setPage(page + 1);

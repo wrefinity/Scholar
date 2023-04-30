@@ -45,7 +45,6 @@ const FormEdit = ({ scholar }) => {
   }, [message, isSubmit, dispatch]);
 
   const addScholar = async () => {
-    console.log(isSubmit);
     if (
       [
         benefitPre,

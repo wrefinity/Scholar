@@ -1,5 +1,5 @@
 import Scholar from "../model/Scholars.js";
-import checkId from "../utils/mongoIdCheck.js";
+import checkId from "../Utils/mongoIdCheck.js";
 import StatusCodes from "http-status-codes";
 
 class ScholarRepo {
@@ -41,8 +41,8 @@ class ScholarRepo {
 
   deleteScholarPost = async (req, res) => {
     const { userId, postId } = req.params;
-    checkId(userId);
-    checkId(postId);
+    checkId(res, userId);
+    checkId(res, postId);
     const scholarDoc = await Scholar.updateOne(
       { userId },
       {
@@ -58,7 +58,7 @@ class ScholarRepo {
   };
   getScholar = async (req, res) => {
     const { userId } = req.params;
-    checkId(userId);
+    checkId(res, userId);
     const scholarDoc = await Scholar.findOne({
       userId,
     })

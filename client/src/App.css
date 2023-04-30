@@ -771,3 +771,9 @@ nav.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
   top: 0;
   z-index: -1;
 }
+
+.max-img {
+  max-height: 40vh;
+  height: 40vh;
+  width: 100;
+}

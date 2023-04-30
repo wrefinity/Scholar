@@ -133,8 +133,8 @@ const partnersSlice = createSlice({
     },
     [deletePartners.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.partners = state.partners.filter((s) => s._id !== payload?._id);
       state.message = "partner deleted";
+      state.partners = state.partners.filter((s) => s._id !== payload?._id);
     },
   },
 });
