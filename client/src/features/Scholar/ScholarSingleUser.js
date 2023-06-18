@@ -1,20 +1,44 @@
-import React, {useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Row, Container, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { myScholarship, selectAllScholarships } from "../../Slicer/ScholarApply";
+import Axioss from "../../app/Axioss";
 
 
 const ScholarSingleUser = () => {
-    const dispatch = useDispatch()
+    // const dispatch = useDispatch()
+
+    // useEffect(() => {
+    //     dispatch(myScholarship())
+    //   }, [dispatch]);
+    // const scholars = useSelector(selectAllScholarships);
+    // console.log(scholars)
+    const token = JSON.parse(localStorage.getItem("user")).token;
+
+    const [data, setData] = useState([]);
 
     useEffect(() => {
-        dispatch(myScholarship())
-      }, [dispatch]);
-    const scholars = useSelector(selectAllScholarships);
-    console.log(scholars)
+        const fetchData = async () => {
+            console.log("running")
+            try {
+                const config = {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                };
+                const response = await Axioss.get('scholarships/scholar', config);
+                console.log(response)
+                setData(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
 
-    
-    
+        fetchData();
+    }, []);
+
+
+
     // const categoryTable = !scholars
     //     ? ""
     //     : scholars.scholarships.map((cat) => {
@@ -48,7 +72,7 @@ const ScholarSingleUser = () => {
                 <Row className="justify-content-center align-items-center mb-5">
                     <Col md="4" lg="4" sm="12">
                         <Table striped className="mb-5" align="middle">
-                            <tbody>{}</tbody>
+                            <tbody>{ }</tbody>
                         </Table>
                     </Col>
 

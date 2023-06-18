@@ -20,7 +20,6 @@ import decode from "jwt-decode";
 import { toast } from "react-toastify";
 
 const Header = () => {
-   // <Nav.Link href="/myscholarships">Applied Scholarships</Nav.Link>
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate()
@@ -90,7 +89,6 @@ const Header = () => {
             {user && (
               <>
               <Nav.Link href="/scholars_apply">Scholarships</Nav.Link>
-             
               </>
             )}
             

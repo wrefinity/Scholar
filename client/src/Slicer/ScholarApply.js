@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import requestHandler from "./requestHandler";
 const API_URL = "scholarships";
 
+
 const initialState = {
   scholarships: [],
   status: "idle",
