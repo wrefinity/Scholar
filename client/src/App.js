@@ -34,12 +34,13 @@ import UsersTable from "./features/User/UsersTable";
 import About from "./features/About/About";
 import AboutScreen from "./Screen/About/AboutScreen";
 import MessengerScreen from "./Screen/Messenger/MessengerScreen";
-// import ResetPassword from "./features/Login/ResetPassword";
+import ResetPassword from "./features/Login/ResetPassword";
 import NewPassword from "./features/Login/NewPassword";
 import ScholarTerms from "./features/Scholar/ScholarTerms";
 import ScholarSingleUser from "./features/Scholar/ScholarSingleUser";
 import ScholarAll from "./features/Scholar/ScholarAll";
 import EmailVerify from "./features/Login/EmailVerify";
+import NotFound from "./components/NotFound";
 
 const App = () => {
   return (
@@ -51,6 +52,7 @@ const App = () => {
           <Route path="/" element={<Layout />}>
             {/* unprotected route  */}
             <Route path="/" element={<MainBody />} />
+            <Route path="/password_reset" element={<ResetPassword />}/>
             <Route path="/login" element={<Login />} />
             <Route path="/users_verification/:id/:token" element={<EmailVerify />} />
             <Route path="/reset_now/:id/:token" element={<NewPassword />} />
@@ -232,10 +234,7 @@ const App = () => {
             />
             <Route path="services" />
 
-            {/* for protected routes */}
-            <Route element={<RequireAuth allowedRoles={[]} />}>
-              {/* <Route path="register" /> */}
-            </Route>
+            <Route path="/*" element={<NotFound />} />
           </Route>
         </Routes>
       </ScrollToTop>

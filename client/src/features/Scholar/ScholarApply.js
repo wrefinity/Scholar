@@ -4,10 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
   handleInput,
-  handleInputImage,
   validateEmpty,
 } from "../../Utils/InputHelpers";
-import { FileInput } from "../../Utils/FileInput";
 import { createScholarship, reseter } from "../../Slicer/ScholarApply";
 
 const ScholarApply = () => {

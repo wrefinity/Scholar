@@ -29,6 +29,7 @@ const ResetPassword = () => {
     });
   };
 
+  console.log("i was called")
   useEffect(() => {
     referal.current();
   }, [formErrors, status, message, navigate, dispatch]);
