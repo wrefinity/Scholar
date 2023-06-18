@@ -4,16 +4,15 @@ import AuthRoles from "../middleware/authroles.js";
 
 const router = express.Router();
 
+router.route("/scholar").get(AuthRoles.Authenticate, ScholarRepo.myScholarship)
 router
   .route("/apply")
   .post(
     AuthRoles.Authenticate,
     AuthRoles.authorizeStudent,
     ScholarRepo.addScholar
-  )
-  .get(
+  ).get(
     AuthRoles.Authenticate,
-    AuthRoles.authorizeStudentAdmin,
     ScholarRepo.getAllScholar
   );
 router

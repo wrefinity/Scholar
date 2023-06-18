@@ -35,8 +35,9 @@ export const getScholarship = createAsyncThunk(
   "scholarships/get_all",
   async (_, ThunkAPI) => {
     try {
-      const token = requestHandler.getToken(ThunkAPI);
-      const res = await requestHandler.axioGetHeader(API_URL, token);
+      const token = ThunkAPI.getState().auth.user.token ??
+        JSON.parse(localStorage.getItem("user")).token;
+      const res = await requestHandler.axioGetHeader(`${API_URL}/apply`, token);
       return res?.data;
     } catch (error) {
       const message =
@@ -92,9 +93,9 @@ export const deleteSingleScholarship = createAsyncThunk(
   "scholarships/delete",
   async (credentials, ThunkAPI) => {
     try {
-      const userInfo =  ThunkAPI.getState().auth.user.token ??
+      const userInfo = ThunkAPI.getState().auth.user.token ??
         JSON.parse(localStorage.getItem("user")).token;
-      const {_id:userId} = userInfo
+      const { _id: userId } = userInfo
       const postId = credentials
       const res = requestHandler.axioDeleteHeader(
         `${API_URL}/${userId}/${postId}`,
@@ -111,6 +112,53 @@ export const deleteSingleScholarship = createAsyncThunk(
   }
 );
 
+export const getSingleScholarship = createAsyncThunk(
+  "scholarships/get_single",
+  async (_, ThunkAPI) => {
+    try {
+      const userInfo =
+        ThunkAPI.getState().auth.user.token ??
+        JSON.parse(localStorage.getItem("user")).token;
+      const { _id: userId } = userInfo;
+      const res = requestHandler.axioDeleteHeader(
+        `${API_URL}/${userId}`,
+        userInfo
+      );
+
+      return res?.data;
+    } catch (er) {
+      const message =
+        (er.response && er.response.data && er.response.data.message) ||
+        er.message ||
+        er.toString();
+      return ThunkAPI.rejectWithValue(message);
+    }
+  }
+);
+// myscholarship
+export const myScholarship = createAsyncThunk(
+  "scholarships/my_scholarship",
+  async (_, ThunkAPI) => {
+    try {
+      const userInfo = ThunkAPI.getState().auth.user.token ??
+        JSON.parse(localStorage.getItem("user"))?.token;
+      const res = requestHandler.axioGetHeader(
+        `${API_URL}/scholar`, userInfo
+      );
+      
+      return res?.data;
+    } catch (er) {
+
+      const message =
+        (er.response && er.response.data && er.response.data.message) ||
+        er.message ||
+        er.toString();
+        console.log(message)
+      return ThunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const scholarshipSlice = createSlice({
   name: "scholarships",
   initialState,
@@ -121,12 +169,24 @@ const scholarshipSlice = createSlice({
     },
   },
   extraReducers: {
+    // myScholarship
+    [myScholarship.pending]: (state) => {
+      state.status = "loading";
+    },
+    [myScholarship.rejected]: (state, { payload }) => {
+      state.status = "failed";
+      state.message = payload.data.message;
+    },
+    [myScholarship.fulfilled]: (state, { payload }) => {
+      state.status = "succeeded";
+      state.scholarships = payload;
+    },
     [createScholarship.pending]: (state) => {
       state.status = "loading";
     },
     [createScholarship.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.scholarships.push(payload.data.scholar);
+      // state.scholarships.push(payload.data.scholar);
       state.message = payload.data.message;
     },
     [createScholarship.rejected]: (state, { payload }) => {
@@ -139,7 +199,7 @@ const scholarshipSlice = createSlice({
     },
     [getScholarship.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
-      state.scholarships = payload.data.scholar;
+      state.scholarships = payload;
       state.status = "idle";
     },
     [getScholarship.rejected]: (state, { payload }) => {
@@ -176,6 +236,19 @@ const scholarshipSlice = createSlice({
       state.scholarships = state.scholarships.filter(
         (sch) => sch._id !== scholes._id
       );
+      state.message = payload.data.message;
+    },
+    //get single scholar
+    [getSingleScholarship.pending]: (state) => {
+      state.status = "loading";
+    },
+    [getSingleScholarship.rejected]: (state, { payload }) => {
+      state.status = "failed";
+      state.message = payload.data.message;
+    },
+    [getSingleScholarship.fulfilled]: (state, { payload }) => {
+      state.status = "succeeded";
+      state.scholarships = payload.data.scholar;
       state.message = payload.data.message;
     },
     //deletecase single scholar

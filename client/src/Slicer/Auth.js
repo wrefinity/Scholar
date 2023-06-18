@@ -54,6 +54,59 @@ export const login = createAsyncThunk(
   }
 );
 
+// Login user
+export const resetLink = createAsyncThunk(
+  "user/reset_link",
+  async (resetInfo, { rejectWithValue }) => {
+    try {
+      return await requestHandler.axioPost(`${API_URL}/reset_link`, resetInfo);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return rejectWithValue(message);
+    }
+  }
+);
+// reset_password
+export const resetPassword = createAsyncThunk(
+  "user/reset",
+  async (resetInfo, { rejectWithValue }) => {
+    try {
+      const {token, id, password}  = resetInfo 
+      return await requestHandler.axioPost(`${API_URL}/reset_password/${id}/${token}`, {password});
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return rejectWithValue(message);
+    }
+  }
+);
+export const confirmEmail = createAsyncThunk(
+  "user/confirmation",
+  async (resetInfo, { rejectWithValue }) => {
+    try {
+      const {token, id}  = resetInfo 
+      return await requestHandler.axioGet(`${API_URL}/users_verification/${id}/${token}`);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return rejectWithValue(message);
+    }
+  }
+);
+
 export const logout = createAsyncThunk("auth/logout", async (_, ThunkAPI) => {
   try {
     return await requestHandler.axioGet(`${API_URL}/logout`);
@@ -112,6 +165,45 @@ const authSlice = createSlice({
     [logout.fulfilled]: (state) => {
       state.user = null;
     },
+    // resetPassword
+    [resetPassword.pending]: (state) => {
+      state.status = "loading";
+    },
+    [resetPassword.fulfilled]: (state, { payload }) => {
+      state.status = "succeeded";
+      state.message = payload?.data?.message;;
+    },
+    [resetPassword.rejected]: (state, { payload }) => {
+      state.status = "failed";
+      state.message = payload;
+    },
+    // resetLink
+    [resetLink.pending]: (state) => {
+      state.status = "loading";
+    },
+    [resetLink.fulfilled]: (state, { payload }) => {
+      state.status = "succeeded";
+      state.message = payload?.data?.message;
+    },
+    [resetLink.rejected]: (state, { payload }) => {
+      state.status = "failed";
+      state.message = payload;
+    },
+    //confirmEmail
+    // resetLink
+    [confirmEmail.pending]: (state) => {
+      state.status = "loading";
+    },
+    [confirmEmail.fulfilled]: (state, { payload }) => {
+      state.status = "succeeded";
+      state.message = payload?.data?.message;
+    },
+    [confirmEmail.rejected]: (state, { payload }) => {
+      state.status = "failed";
+      state.message = payload;
+    },
+
+ 
   },
 });
 export const getUser = (state) => state?.auth;

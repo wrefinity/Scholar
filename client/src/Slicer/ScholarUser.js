@@ -112,6 +112,29 @@ export const deleteSingleScholarship = createAsyncThunk(
   }
 );
 
+export const getSingleScholarship = createAsyncThunk(
+  "scholarships/get_single",
+  async (_, ThunkAPI) => {
+    try {
+      const userInfo =
+        ThunkAPI.getState().auth.user.token ??
+        JSON.parse(localStorage.getItem("user")).token;
+      const { _id: userId } = userInfo;
+      const res = requestHandler.axioDeleteHeader(
+        `${API_URL}/${userId}`,
+        userInfo?.token
+      );
+      return res?.data;
+    } catch (er) {
+      const message =
+        (er.response && er.response.data && er.response.data.message) ||
+        er.message ||
+        er.toString();
+      return ThunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const scholarshipSlice = createSlice({
   name: "scholarships",
   initialState,
@@ -179,6 +202,7 @@ const scholarshipSlice = createSlice({
       );
       state.message = payload.data.message;
     },
+
     //deletecase single scholar
     [deleteSingleScholarship.pending]: (state) => {
       state.status = "loading";

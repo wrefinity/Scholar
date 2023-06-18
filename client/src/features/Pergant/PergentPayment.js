@@ -19,7 +19,8 @@ export default function PergentPayment() {
   const voter = JSON.parse(localStorage.getItem("voter"));
   if (pergants === "undefined") navigate("/");
 
-  const { voters, phone, email, amount } = voter;
+  const { voters, phone, email, numberVote } = voter;
+  console.log("Number of count", numberVote)
   const [isSubmit, setIsSubmit] = useState(false);
   const [isPayment, setSuccessPayment] = useState(false);
   const dispatch = useDispatch();
@@ -28,8 +29,8 @@ export default function PergentPayment() {
   const config = {
     public_key: publicId,
     tx_ref: Date.now(),
-    amount,
-    currency: "NGN",
+    amount:pergants?.title?.amount * numberVote, 
+    currency: 'NGN', // Currency set to dollars
     payment_options: "card",
     customer: {
       email: email,
@@ -43,13 +44,17 @@ export default function PergentPayment() {
     },
   };
 
-  const incrementRate = () => pergants?.title?.amount / amount;
+  const incrementRate = () => {
+    const total = pergants?.title?.amount;
+    console.warn(total)
+    return numberVote;
+  }
 
   const handleSuccessAction = (reference) => {
     dispatch(
       incrementPergant({
         name: voters,
-        counter: incrementRate,
+        counter: incrementRate(),
         _id: pergants?._id,
       })
     );

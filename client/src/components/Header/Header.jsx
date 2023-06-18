@@ -14,10 +14,13 @@ import { getScholarsPost, reseter as ResetScholar } from "../../Slicer/Post";
 import { getCatPergant, reseter as RestCatPergant } from "../../Slicer/CatPergant";
 import { getPergant, reseter as RestPergant } from "../../Slicer/Pergent";
 import { getUsers, reseter as resetUsers } from "../../Slicer/UserSlice";
+import { getSubcription, reseter as resetSub } from "../../Slicer/Utils";
+
 import decode from "jwt-decode";
 import { toast } from "react-toastify";
 
 const Header = () => {
+   // <Nav.Link href="/myscholarships">Applied Scholarships</Nav.Link>
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate()
@@ -45,13 +48,16 @@ const Header = () => {
     dispatch(getScholarsPost());
     dispatch(getPergant());
     dispatch(getCatPergant());
+    const roler = process.env.REACT_APP_ROLER
     if (
-      user?.fullname === "admin" ||
-      user?.role === "admin"
+      user?.fullname === roler||
+      user?.role === roler
     ) {
 
       dispatch(getUsers());
       dispatch(resetUsers());
+      dispatch(getSubcription());
+      dispatch(resetSub())
     }
     dispatch(ResetCat())
     dispatch(ResetAbout())
@@ -63,6 +69,7 @@ const Header = () => {
     dispatch(RestCatPergant())
     dispatch(RestPergant())
     dispatch(ResetType())
+    dispatch(resetSub())
 
   }, [dispatch]);
 
@@ -80,14 +87,23 @@ const Header = () => {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/scholars_apply">Scholarships</Nav.Link>
+            {user && (
+              <>
+              <Nav.Link href="/scholars_apply">Scholarships</Nav.Link>
+             
+              </>
+            )}
+            
+
             {user?.fullname === "admin" || user?.role === "admin" ? (
               <NavDropdown title="Menu" id="collasible-nav-dropdown ">
                 <NavDropdown.Item href="/scholarships" className="mt-2">Scholarships</NavDropdown.Item>
+                <NavDropdown.Item href="/application" className="mt-2">Applied - Scholarships</NavDropdown.Item>
+
                 <NavDropdown.Item href="/scholars_add" className="mt-2" >Scholarship-Add</NavDropdown.Item>
                 <NavDropdown.Item href="/scholars_category" className="mt-2" >Scholarship-Category</NavDropdown.Item>
                 <NavDropdown.Item href="/gallery_admin" className="mt-2">Gallery</NavDropdown.Item>
-                <NavDropdown.Item href="/member_admin" className="mt-2">Member</NavDropdown.Item>
+                <NavDropdown.Item href="/member_admin" className="mt-2">Staffs</NavDropdown.Item>
                 <NavDropdown.Item href="/service_admin" className="mt-2">Service</NavDropdown.Item>
                 <NavDropdown.Item href="/patners" className="mt-2">Partner</NavDropdown.Item>
                 <NavDropdown.Item href="/pergants_create" className="mt-2">Pargent</NavDropdown.Item>
@@ -95,6 +111,7 @@ const Header = () => {
                 <NavDropdown.Item href="/types" className="mt-2">Applicant</NavDropdown.Item>
                 <NavDropdown.Item href="/catpergant" className="mt-2">Category Pergant</NavDropdown.Item>
                 <NavDropdown.Item href="/about_home" className="mt-2">About</NavDropdown.Item>
+                <NavDropdown.Item href="/messenger" className="mt-2">Messenger</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="/users" className="mt-2">
                   Users
@@ -102,7 +119,6 @@ const Header = () => {
               </NavDropdown>
             ) : ""}
             <Nav.Link href="/about">About-Us</Nav.Link>
-            {/* <Nav.Link href="#">Services</Nav.Link> */}
             <Nav.Link href="/contact_us">Contact</Nav.Link>
           </Nav>
           <Nav>

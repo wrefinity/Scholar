@@ -13,6 +13,7 @@ import scholarReducer from "../Slicer/ScholarApply";
 import CatPergants from "../Slicer/CatPergant";
 import Pergant from "../Slicer/Pergent";
 import typeReducer from "../Slicer/Types";
+import subcriberReducer from "../Slicer/Utils"
 const store = configureStore({
   reducer: {
     posts: postReducer,
@@ -29,6 +30,7 @@ const store = configureStore({
     types: typeReducer,
     catpergants: CatPergants,
     pergants: Pergant,
+    subcribe:subcriberReducer,
   },
 });
 export default store;

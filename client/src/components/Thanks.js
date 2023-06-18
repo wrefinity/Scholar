@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Container, Col } from "react-bootstrap";
+import { Row, Container } from "react-bootstrap";
 import success from "../assets/img/check.png";
 
 const Thanks = () => {

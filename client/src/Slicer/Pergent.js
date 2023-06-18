@@ -90,6 +90,7 @@ export const incrementPergant = createAsyncThunk(
   async (credentials, thunkAPI) => {
     try {
       const { _id, ...rest } = credentials;
+      console.warn(credentials)
       const res = await requestHandler.axioPatch(
         `${API_URL}/increment/${_id}`,
         rest

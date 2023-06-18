@@ -23,7 +23,7 @@ const PartnerList = () => {
                 className="rounded-circle"
               />
             </td>
-            <td scope="col">
+            <td>
               <button
                 className="btn btn-sm btn-danger m-1 mb-1"
                 onClick={() => {

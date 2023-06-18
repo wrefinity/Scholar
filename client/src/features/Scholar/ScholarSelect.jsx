@@ -11,7 +11,7 @@ const ScholarSelect = () => {
         : scholars.map((cat) => {
             return (
                 <tr key={cat?._id}>
-                    <td scope="col" className="justify-content-center align-items-center p-4">
+                    <td  className="justify-content-center align-items-center p-4">
                         <img
                             src={`${cat?.image}`}
                             alt=""
@@ -23,6 +23,13 @@ const ScholarSelect = () => {
                                 {cat?.categoryId?.name}
                             </i>
                         </h3>
+
+                        <Link to={`/scholars_terms/${cat?._id}`}>
+                        <h6>
+                            term and conditions
+                        </h6>
+                        
+                        </Link>
                         {/* <h4><span className="text-success">FEES: </span>{cat?.categoryId?.amount} </h4> */}
                         <Link to={`/scholars_apply/${cat?._id}`}>
                             <button
@@ -32,7 +39,7 @@ const ScholarSelect = () => {
                             </button>
 
                         </Link>
-                        <p> {cat?.body}</p>
+                        <p className='text-justify'> {cat?.body}</p>
                     </td>
                 </tr>
             );
@@ -40,11 +47,11 @@ const ScholarSelect = () => {
 
 
     return (
-        <Container fluid className="mb-5 mt-5 pt-5 justify-content-center align-items-center mbt">
+        <Container fluid className="mb-5 mt-5 pt-5 justify-content-center align-items-center ">
             <Row className="mt-5 mb-3 text-center text-uppercase">
                 <h2>Select Scholarship </h2>
             </Row>
-            <Row className="justify-content-center align-items-center">
+            <Row className="justify-content-center align-items-center mb-5">
                 <Col md="4" lg="4" sm="12">
                     <Table striped className="mb-5" align="middle">
                         <tbody>{categoryTable}</tbody>

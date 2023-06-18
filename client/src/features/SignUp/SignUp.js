@@ -50,7 +50,7 @@ const SignUp = () => {
       reset();
       dispatch(reseter());
       setIsSubmit(false);
-      navigate("/login");
+      // navigate("/login");
     }
     if (status === "failed") {
       toast.error(message, { autoClose: 4000 });

@@ -4,10 +4,8 @@ import AuthRoles from "../middleware/authroles.js";
 
 const router = express.Router();
 
-router
-  .route("/")
-  .post(UserRepo.regPost)
-  .get(AuthRoles.Authenticate, AuthRoles.authorizeAdmin, UserRepo.getUsers);
+router.post("/", UserRepo.regPost)
+router.get('/', AuthRoles.Authenticate, AuthRoles.authorizeAdmin, UserRepo.getUsers);
 
 router
   .route("/:id")
@@ -29,6 +27,10 @@ router
 
 router.route("/login").post(UserRepo.login_post);
 
+router.route("/reset_link").post(UserRepo.reset_link);
+router.post("/reset_password/:id/:token", UserRepo.changePassword);
+router.get("/users_verification/:id/:token", UserRepo.confirmRegistration);
+
 router.post(
   "/changePassword",
   AuthRoles.Authenticate,
@@ -42,5 +44,7 @@ router.post(
   UserRepo.changeImage
 );
 router.get("/logout", UserRepo.logout);
+
+
 
 export default router;

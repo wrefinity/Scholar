@@ -33,8 +33,9 @@ class PergantRepo {
     updated && res.status(StatusCodes.OK).json(updated);
   });
   incrementPergant = async (req, res) => {
-    const { pergantId } = req.params;
+    const { id:pergantId } = req.params;
     const { name, counter } = req.body;
+    
     checkId(res, pergantId);
     const pergant = await Pergant.updateOne(
       { _id: pergantId },

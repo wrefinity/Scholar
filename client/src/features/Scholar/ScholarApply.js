@@ -31,7 +31,7 @@ const ScholarApply = () => {
   });
   const dispatch = useDispatch();
   const referal = useRef();
-  const { isLoading, status, message } = useSelector((state) => state.posts);
+  const { status, message } = useSelector((state) => state.posts);
 
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);

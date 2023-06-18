@@ -3,7 +3,6 @@ import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { LineWave } from "react-loader-spinner";
-import { useParams } from "react-router-dom";
 import {
   handleInput,
   validateEmpty,
@@ -13,7 +12,6 @@ import {
 import {
   reseter,
   createCategory,
-  updateCategories,
 } from "../../Slicer/Categories";
 
 const ScholarCategory = () => {
@@ -25,7 +23,6 @@ const ScholarCategory = () => {
   const { status, message } = useSelector((state) => state.categories);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
-  const { id } = useParams();
   const referal = useRef();
   const dispatch = useDispatch();
   useEffect(() => {

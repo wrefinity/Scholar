@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Form from 'react-bootstrap/Form';
+import { toast } from "react-toastify";
 import { addPost, reseter } from "./postslice";
 import { HandleInput, validateEmpty } from "../FormHelper";
 
@@ -12,6 +14,7 @@ const PostForm = () => {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
+  const referal = useRef();
   const { status, message } = useSelector((state) => state.posts);
 
   const handleSubmit = async (e) => {
@@ -85,7 +88,7 @@ const PostForm = () => {
         name="description"
         value={post.content}
         className="form-control"
-        onChange={(e) => handleInput(e, setPost)}
+        onChange={(e) => HandleInput(e, setPost)}
         />
       </Form.Group>
     </Form>

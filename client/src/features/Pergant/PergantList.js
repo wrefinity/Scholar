@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Tab, Nav } from "react-bootstrap";
+import { Container, Row, Col} from "react-bootstrap";
 import { PergantCard } from "./PergantCard";
 import { useSelector } from "react-redux";
 import colorSharp2 from "../../assets/img/color-sharp2.png";
@@ -12,7 +12,7 @@ const GalleryList = () => {
       <Container>
         <Row>
           <h3 className="cus_txt_color fw-500 text-center">
-            MODELS ADVERTISEMENT
+          MODEL COMMERCIALS
           </h3>
           <Col size={12}>
             <Row>
@@ -23,7 +23,7 @@ const GalleryList = () => {
           </Col>
         </Row>
       </Container>
-      <img className="background-image-right" src={colorSharp2}></img>
+      <img className="background-image-right" alt='xwc' src={colorSharp2}/>
     </section>
   );
 };

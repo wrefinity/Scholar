@@ -32,7 +32,7 @@ const MemberList = () => {
               Twitter: {mem.twitter} <br />
               Instagram: {mem.instagram}
             </td>
-            <td scope="col">
+            <td>
               <button
                 className="btn btn-sm btn-danger m-1 mb-1"
                 onClick={() => {

@@ -20,7 +20,6 @@ const PostList = () => {
             <tr key={cat?._id}>
               <td>{moment(cat.createdAt).format("DD/MM/YYYY")}</td>
               <td
-                scope="col"
                 className="justify-content-center align-items-center p-4"
               >
                 <img

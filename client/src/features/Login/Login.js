@@ -51,21 +51,22 @@ const Login = () => {
   };
 
   const dispatchLogin = () => {
-    if (Object.keys(formErrors).length === 0 && isSubmit && status === "idle") {
-      dispatch(login(loginData));
+    if (Object.keys(formErrors).length === 0 && isSubmit ) {
       dispatch(reseter());
+      dispatch(login(loginData));
       setIsSubmit(false);
     }
 
     if (status === "succeeded" || user) {
       toast.success("login sucess", { autoClose: 2000 });
-      reset();
       dispatch(reseter());
+      reset();
       redirector();
     }
     if (status === "failed") {
       dispatch(reseter());
       toast.error(message, { autoClose: 4000 });
+      setIsSubmit(false);
     }
   };
   referal.current = dispatchLogin;
@@ -118,11 +119,7 @@ const Login = () => {
                         className="mb-3"
                         controlId="formBasicCheckbox"
                       >
-                        <p className="small">
-                          <a className="text-primary" href="#!">
-                            Forgot password?
-                          </a>
-                        </p>
+              
                       </Form.Group>
                       <div className="d-grid">
                         {status === "laoding" ? (
@@ -143,6 +140,14 @@ const Login = () => {
                         Don't have an account?{" "}
                         <Link to="/signup" className="text-primary fw-bold">
                           Sign Up
+                        </Link>
+                      </p>
+                    </div>
+                    <div className="mt-3">
+                      <p className="mb-0  text-center">
+                        forgot password ?{" "}
+                        <Link to="/password_reset" className="text-danger fw-bold">
+                          recover here
                         </Link>
                       </p>
                     </div>

@@ -21,6 +21,7 @@ import scholarRoute from "./Router/scholar.js";
 import catPergantRoute from "./Router/CatPergant.js";
 import PergantRoute from "./Router/Pergant.js";
 import typeRoute from "./Router/Typess.js";
+import subcribeRouter from "./Router/Subcribe.js"
 import errorHandler from "./middleware/errorMiddleware.js";
 import notFoundMiddleware from "./middleware/not_found.js";
 
@@ -56,6 +57,7 @@ app.use("/api/services", serviceRoute);
 app.use("/api/partners", partnerRoute);
 app.use("/api/scholarships", scholarRoute);
 app.use("/api/types", typeRoute);
+app.use("/api/subcribe", subcribeRouter)
 
 app.use(errorHandler);
 app.use(notFoundMiddleware);

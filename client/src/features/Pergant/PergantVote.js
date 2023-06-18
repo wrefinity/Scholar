@@ -12,7 +12,7 @@ const PergantVote = () => {
     voters: "",
     phone: "",
     email: "",
-    amount: "",
+    numberVote: "",
   });
   const { pergentId } = useParams();
   const pergants = useSelector((state) => getPergantsById(state, pergentId));
@@ -85,12 +85,12 @@ const PergantVote = () => {
                     </Form.Group>
                     <p className="text-danger">{formErrors?.phone}</p>
                     <Form.Group className="mb-3" controlId="formBasicxEmail">
-                      <Form.Label className="text-center">Amount</Form.Label>
+                      <Form.Label className="text-center">Number of Vote</Form.Label>
                       <Form.Control
-                        type="text"
-                        name="amount"
-                        value={formData.amount}
-                        placeholder="enter the payable amount"
+                        type="number"
+                        name="numberVote"
+                        value={formData.numberVote}
+                        placeholder="enter the number of vote"
                         onChange={(e) => handleInput(e, setFormData)}
                       />
                     </Form.Group>

@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { MailchimpForm } from "./MailchimpForm";
+// import { MailchimpForm } from "./MailchimpForm";
+import { Newsletter } from "./Newsletter";
 import logo from "../../assets/img/sss.png";
 import navIcon1 from "../../assets/img/nav-icon1.svg";
 import navIcon2 from "../../assets/img/nav-icon2.svg";
@@ -9,8 +10,8 @@ import navIcon4 from "../../assets/img/twitter.svg";
 
 const Footer = () => {
   return (
-    <Container fluid className="footer mt-5">
-      <MailchimpForm />
+    <Container fluid className="footer">
+      <Newsletter />
       <Row>
         <Col size={12} sm={6}>
           <img src={logo} alt="Logo" />

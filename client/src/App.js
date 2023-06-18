@@ -33,6 +33,14 @@ import PergentPayment from "./features/Pergant/PergentPayment";
 import UsersTable from "./features/User/UsersTable";
 import About from "./features/About/About";
 import AboutScreen from "./Screen/About/AboutScreen";
+import MessengerScreen from "./Screen/Messenger/MessengerScreen";
+// import ResetPassword from "./features/Login/ResetPassword";
+import NewPassword from "./features/Login/NewPassword";
+import ScholarTerms from "./features/Scholar/ScholarTerms";
+import ScholarSingleUser from "./features/Scholar/ScholarSingleUser";
+import ScholarAll from "./features/Scholar/ScholarAll";
+import EmailVerify from "./features/Login/EmailVerify";
+
 const App = () => {
   return (
     <div style={{ margin: 0 }}>
@@ -44,6 +52,9 @@ const App = () => {
             {/* unprotected route  */}
             <Route path="/" element={<MainBody />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/users_verification/:id/:token" element={<EmailVerify />} />
+            <Route path="/reset_now/:id/:token" element={<NewPassword />} />
+            <Route path="/about" element={<About />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/thanks" element={<Thanks />} />
             <Route path="/about" element={<About />} />
@@ -76,6 +87,24 @@ const App = () => {
                 </ProtectedAdminRoute>
               }
             />
+
+            <Route
+              path="/scholars_terms/:id"
+              element={
+                <ProtectedAdminRoute>
+                  <ScholarTerms />
+                </ProtectedAdminRoute>
+              }
+            />
+
+            <Route
+              path="/messenger"
+              element={
+                <ProtectedAdminRoute>
+                  <MessengerScreen />
+                </ProtectedAdminRoute>
+              }
+            />
             <Route
               path="/scholars_apply"
               element={
@@ -97,6 +126,23 @@ const App = () => {
               element={
                 <ProtectedAdminRoute>
                   <PostList />
+                </ProtectedAdminRoute>
+              }
+            />
+ 
+            <Route
+              path="/myscholarships"
+              element={
+                <ProtectedRoute>
+                  <ScholarSingleUser />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/application"
+              element={
+                <ProtectedAdminRoute>
+                  <ScholarAll />
                 </ProtectedAdminRoute>
               }
             />

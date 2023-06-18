@@ -18,7 +18,7 @@ const CategoryList = () => {
             <td>{cat.name}</td>
             <td>{cat.amount}</td>
             <td>{cat.status}</td>
-            <td scope="col">
+            <td>
               <button
                 className="btn btn-sm btn-danger m-1 mb-1"
                 onClick={() => {

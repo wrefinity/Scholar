@@ -4,7 +4,6 @@ import { selectAllCategories } from "../../Slicer/Categories";
 import { selectAllTypes } from "../../Slicer/Types";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import ScholarPayment from "./ScholarPayment";
-import { validateEmpty } from "../../Utils/InputHelpers";
 import { toast } from "react-toastify";
 const Educational = ({
   scholar,
@@ -22,7 +21,6 @@ const Educational = ({
   const [submitted, setSubmitted] = useState(false);
   const categories = useSelector(selectAllCategories);
   const all_types = useSelector(selectAllTypes);
-  const [formErrors, setFormErrors] = useState({});
   const [checker, setChecker] = useState({
     signature: "",
     passport: "",
@@ -224,7 +222,7 @@ const Educational = ({
                     <Button onClick={handleSubmited}>Submit </Button>
                     {submitted && (
                       <ScholarPayment
-                        scholarship={scholar}
+                        scholar={scholar}
                         reset={reset}
                         reseter={reseter}
                       />

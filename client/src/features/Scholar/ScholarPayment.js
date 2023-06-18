@@ -17,6 +17,8 @@ export default function ScholarPayment({ scholar }) {
   const [isPayment, setSuccessPayment] = useState(false);
   const dispatch = useDispatch();
 
+  console.log(scholar)
+
   const publicId = process.env.REACT_APP_FLUTTER_PUBLIC_KEY;
   const config = {
     public_key: publicId,

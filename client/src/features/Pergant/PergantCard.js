@@ -8,10 +8,10 @@ export const PergantCard = ({ _id, title, payments, name, image }) => {
       <Link to={`/model/${_id}`}>
         <div className="proj-imgbx mt-5 ">
           <Row className="cus_color text-white">
-            <p className="text-align-center text-white">{payments}</p>
+            <p className="text-align-center text-white"> Total Vote {' '} {payments}</p>
             <p className="text-align-center text-white">{title?.name}</p>
           </Row>
-          <img src={image} className="max-img" />
+          <img src={image} alt='xxcc' className="max-img" />
           <div className="proj-txtx text-white">
             <h4>{name}</h4>
             <span>{title?.amount}</span>

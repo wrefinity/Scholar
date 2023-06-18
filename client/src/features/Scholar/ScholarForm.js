@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import { LineWave } from "react-loader-spinner";
 import {
   handleInput,
@@ -27,9 +28,11 @@ const ScholarForm = () => {
     eligible_country: "",
     host: "",
     deadline: "",
+    terms: "",
   });
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const referal = useRef();
   const { status, message } = useSelector((state) => state.posts);
   const [formErrors, setFormErrors] = useState({});
@@ -40,18 +43,18 @@ const ScholarForm = () => {
   const categoriesOption = !categories
     ? ""
     : Array.from(categories)
-        .sort((a, b) => {
-          if (a.name < b.name) return -1;
-          if (a.name > b.name) return 1;
-          return 0;
-        })
-        .map((category) => {
-          return (
-            <option key={category._id} value={category._id}>
-              {category.name}
-            </option>
-          );
-        });
+      .sort((a, b) => {
+        if (a.name < b.name) return -1;
+        if (a.name > b.name) return 1;
+        return 0;
+      })
+      .map((category) => {
+        return (
+          <option key={category._id} value={category._id}>
+            {category.name}
+          </option>
+        );
+      });
 
   const handleInputImage = (name, value) => {
     setScholar((prev) => ({ ...prev, [name]: value }));
@@ -71,6 +74,7 @@ const ScholarForm = () => {
       eligible_country: [],
       host: "",
       deadline: "",
+      terms: "",
     });
   };
 
@@ -89,6 +93,7 @@ const ScholarForm = () => {
       dispatch(reseter());
       dispatch(createScholarsPost(scholar));
       setIsSubmit(false);
+      
     }
 
     if (status === "succeeded") {
@@ -96,6 +101,7 @@ const ScholarForm = () => {
       reset();
       dispatch(reseter());
       setIsSubmit(false);
+      navigate('/scholarships')
     }
     if (status === "failed") {
       toast.error(message, { autoClose: 4000 });
@@ -147,7 +153,7 @@ const ScholarForm = () => {
                           Deadline
                         </Form.Label>
                         <Form.Control
-                          type="text"
+                          type="date"
                           name="deadline"
                           value={scholar.deadline}
                           placeholder="enter deadline"
@@ -298,7 +304,19 @@ const ScholarForm = () => {
                           name="body"
                           value={scholar.value}
                           as="textarea"
-                          rows={6}
+                          rows={4}
+                          onChange={(e) => handleInput(e, setScholar)}
+                        />
+                      </Form.Group>
+
+                      <Form.Group className="mb-3">
+                        <Form.Label>Terms and Conditions</Form.Label>
+                        <Form.Control
+                          as="textarea"
+                          rows={4}
+                          name="terms"
+                          value={scholar.terms}
+                          className="form-control"
                           onChange={(e) => handleInput(e, setScholar)}
                         />
                       </Form.Group>

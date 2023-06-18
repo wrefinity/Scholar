@@ -10,6 +10,7 @@ const postSchema = new Mongoose.Schema(
       default: {},
     },
     body: { type: String, required: true },
+    terms: { type: String},
     categoryId: {
       type: Mongoose.Schema.Types.ObjectId,
       ref: "Category",

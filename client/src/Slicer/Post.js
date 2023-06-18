@@ -116,6 +116,7 @@ const postsSlice = createSlice({
     [createScholarsPost.fulfilled]: (state, { payload }) => {
       state.status = "succeeded";
       state.posts.push(payload);
+      
     },
     [createScholarsPost.rejected]: (state, { payload }) => {
       state.status = "failed";

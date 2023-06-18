@@ -7,13 +7,13 @@ class AuthRoles {
   Authenticate = async (req, res, next) => {
     const authHeaders = req.headers.authorization;
     if (!authHeaders)
-      res
+      return res
         .status(StatusCodes.UNAUTHORIZED)
         .json({ message: "Authorization Token Required" });
     try {
       const token = authHeaders.split(" ")[1].toString();
       if (!token) {
-        res
+        return res
           .status(StatusCodes.UNAUTHORIZED)
           .json({ message: "Invalid Authentication Token" });
       }
@@ -22,17 +22,17 @@ class AuthRoles {
         "-password"
       );
       if (!user)
-        res.status(StatusCodes.UNAUTHORIZED)({ message: "No found found" });
+        return res.status(StatusCodes.UNAUTHORIZED)({ message: "No found found" });
       this.currentRole = user.isAdmin;
       req.user = user;
       next();
     } catch (error) {
       if (error.name == "TokenExpiredError") {
-        res.status(498).send({
+        return res.status(498).send({
           message: "Your token is expired!",
         });
       } else {
-        res
+        return res
           .status(StatusCodes.UNAUTHORIZED)
           .json({ message: "Not authorized" });
       }
@@ -65,5 +65,6 @@ class AuthRoles {
     }
     next();
   };
-}
+} 
+
 export default new AuthRoles();

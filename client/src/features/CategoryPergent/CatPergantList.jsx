@@ -17,7 +17,7 @@ const CatPergantList = () => {
                     <td>{moment(cat.createdAt).format("DD/MM/YYYY")}</td>
                     <td>{cat.name}</td>
                     <td>{cat.amount}</td>
-                    <td scope="col">
+                    <td >
                         <button
                             className="btn btn-sm btn-danger m-1 mb-1"
                             onClick={() => {

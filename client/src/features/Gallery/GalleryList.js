@@ -1,49 +1,13 @@
 import React from "react";
 import { Container, Row, Col, Tab, Nav } from "react-bootstrap";
 import { GalleryCard } from "./GalleryCard";
-import projImg1 from "../../assets/img/project-img1.png";
-import projImg2 from "../../assets/img/project-img2.png";
-import projImg3 from "../../assets/img/project-img3.png";
-// import colorSharp2 from "../../assets/img/color-sharp2.png";
 import TrackVisibility from "react-on-screen";
 import { useSelector } from "react-redux";
 import { selectAllGalleries} from "../../Slicer/Gallery";
-import moment from "moment";
 
 const GalleryList = () => {
   const galleries = useSelector(selectAllGalleries);
-  const projects = [
-    {
-      title: "Business Startup",
-      description: "Design & Development",
-      imgUrl: projImg1,
-    },
-    {
-      title: "Business Startup",
-      description: "Design & Development",
-      imgUrl: projImg2,
-    },
-    {
-      title: "Business Startup",
-      description: "Design & Development",
-      imgUrl: projImg3,
-    },
-    {
-      title: "Business Startup",
-      description: "Design & Development",
-      imgUrl: projImg1,
-    },
-    {
-      title: "Business Startup",
-      description: "Design & Development",
-      imgUrl: projImg2,
-    },
-    {
-      title: "Business Startup",
-      description: "Design & Development",
-      imgUrl: projImg3,
-    },
-  ];
+
 
   return (
     <section className="project" id="project">
@@ -91,20 +55,12 @@ const GalleryList = () => {
                       </Tab.Pane>
                       <Tab.Pane eventKey="section">
                         <p>
-                          Lorem ipsum dolor sit amet consectetur adipisicing
-                          elit. Cumque quam, quod neque provident velit, rem
-                          explicabo excepturi id illo molestiae blanditiis,
-                          eligendi dicta officiis asperiores delectus quasi
-                          inventore debitis quo.
+                          Welcome to SamAfrica we give the best experience that you will ever have.
                         </p>
                       </Tab.Pane>
                       <Tab.Pane eventKey="third">
                         <p>
-                          Lorem ipsum dolor sit amet consectetur adipisicing
-                          elit. Cumque quam, quod neque provident velit, rem
-                          explicabo excepturi id illo molestiae blanditiis,
-                          eligendi dicta officiis asperiores delectus quasi
-                          inventore debitis quo.
+                        Welcome to SamAfrica we give the best experience that you will ever have.
                         </p>
                       </Tab.Pane>
                     </Tab.Content>

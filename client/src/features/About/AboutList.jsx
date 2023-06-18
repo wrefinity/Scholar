@@ -1,14 +1,10 @@
 import React from "react";
 import { Table, Container } from "react-bootstrap";
 import moment from "moment";
-import { useSelector, useDispatch } from "react-redux";
-import { selectAllAbout, updateAbout } from "../../Slicer/About";
+import { useSelector } from "react-redux";
+import { selectAllAbout } from "../../Slicer/About";
 const AboutList = () => {
     const about = useSelector(selectAllAbout);
-    const dispatch = useDispatch();
-    const handleDelete = async (abt) => {
-        await dispatch(updateAbout(abt));
-    };
     const AboutTable = !about
         ? ""
         : about.map((abt) => {

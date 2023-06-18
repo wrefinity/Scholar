@@ -1,6 +1,8 @@
 import Scholar from "../model/Scholars.js";
 import checkId from "../Utils/mongoIdCheck.js";
 import StatusCodes from "http-status-codes";
+import asyncHandler from "express-async-handler";
+import User from "../model/Users.js"
 
 class ScholarRepo {
   addScholar = async (req, res) => {
@@ -34,7 +36,7 @@ class ScholarRepo {
     const deleted = await Scholar.updateOne({ _id: scholarId, isDeleted: true }).exec();
     res.status(StatusCodes.OK).json({
       success: true,
-      scholar:deleted,
+      scholar: deleted,
       message: "scholarship deleted successfully",
     });
   };
@@ -58,22 +60,37 @@ class ScholarRepo {
   };
   getScholar = async (req, res) => {
     const { userId } = req.params;
+    console.log(userId)
     checkId(res, userId);
     const scholarDoc = await Scholar.findOne({
       userId,
-    })
-      .populate("Post")
-      .populate("User");
+    }).populate('userId').exec();
     res.status(StatusCodes.OK).json({
       success: true,
       scholar: scholarDoc,
     });
   };
+
   getAllScholar = async (_, res) => {
-    const scholarDoc = await Scholar.find().populate("User");
-    return res.status(StatusCodes.OK).json({
-      scholarships: scholarDoc,
-    });
+    const scholarDoc = await Scholar.find().populate({ path: 'userId', select:['fullname', 'email', 'phone'], model:User}).exec();
+    console.log(scholarDoc)
+    return res.status(StatusCodes.OK).json(scholarDoc);
   };
+  myScholarship = asyncHandler( async (req, res) => {
+
+    try {
+      const userId = req.user._id;
+      checkId(res, userId);
+      const data = []
+      const scholarDoc = await Scholar.findOne({
+        userId,
+      }).populate({ path: 'userId', select: ['fullname', 'email', 'phone'], model: User,}).exec()
+      if (scholarDoc) data.push(scholarDoc)
+      return res.status(StatusCodes.OK).json(data);
+      // data && res.status(200).json(data);
+    } catch (error) {
+      console.log(err)
+    }
+  });
 }
 export default new ScholarRepo();
