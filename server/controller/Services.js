@@ -39,7 +39,6 @@ class ServiceRepo {
   deleteService = asyncHandler(async (req, res) => {
     const { id } = req.params;
     checkId(res, id);
-    console.log(id);
     const match = await ModelActions.findOne(Services, { _id: id });
     if (!match) {
       return res

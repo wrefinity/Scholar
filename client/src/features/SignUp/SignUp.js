@@ -34,13 +34,14 @@ const SignUp = () => {
   }, [formErrors, status, message, navigate, dispatch]);
 
   const handleSignup = (e) => {
+    setFormErrors({})
     e.preventDefault();
     setFormErrors(validate(signupData));
     setIsSubmit(true);
   };
 
   const dispatchSignup = () => {
-    if (Object.keys(formErrors).length === 0 && isSubmit && status === "idle") {
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
       dispatch(register(signupData));
       setIsSubmit(false);
     }

@@ -81,7 +81,7 @@ const Header = () => {
   return (
     <Navbar collapseOnSelect fixed="top" expand="lg" variant="light" bg="light" className="bg-nav">
       <Container fluid>
-        <Navbar.Brand href="#home">SAM AFRIKA </Navbar.Brand>
+        <Navbar.Brand href="/">SAM AFRIKA </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">

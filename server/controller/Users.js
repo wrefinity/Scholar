@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import JWTAuthentication from "../middleware/authentication.js";
 import bcrypt from "bcrypt";
+import crypto from "crypto"
 import Token from "../model/Token.js";
-import crypto from "crypto";
 import StatusCodes from "http-status-codes";
 import checkId from "../Utils/mongoIdCheck.js";
 import asyncHandler from "express-async-handler";
@@ -12,6 +12,7 @@ import { sendMessage } from "../Utils/messenger.js"
 const maxAge = 3 * 60 * 60 * 24;
 
 class UserRepo {
+  salt = 5
   #tokenGenerator = (id, role) => {
     return jwt.sign({ id: id, role: role }, process.env.JWT_SECRET, {
       expiresIn: maxAge,
@@ -80,101 +81,125 @@ class UserRepo {
   });
 
   //login section
-  login_post = asyncHandler(async (req, res) => {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Please provide email and password" });
-    }
+  login_post = async (req, res) => {
 
-    const user = await User.compareDetails(email, password);
-    // const token = this.#tokenGenerator(user._id, user.role);
+    try {
+
+      if (!req.body.email || !req.body.password) {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ message: "Please provide email and password" });
+      }
+      
+      const user = await User.findOne({ email:req.body.email });
+      if (!user) return res.status(StatusCodes.BAD_REQUEST).json({ message: "User not found!" });
+
+      if (!user.verified) {
+        let token = await Token.findOne({ userId: user._id });
+        if (!token) {
+          token = await new Token({
+            userId: user._id,
+            token: crypto.randomBytes(32).toString("hex"),
+          }).save();
 
 
-    if (!user.verified) {
-      let token = await Token.findOne({ userId: user._id });
-      if (!token) {
-        token = await new Token({
-          userId: user._id,
-          token: crypto.randomBytes(32).toString("hex"),
-        }).save();
+          const url = `${process.env.BASE_URL}users_verification/${user._id}/${token.token}`;
+          const ret = await sendMessage([user.email,], `Activate Your Account \n ${url}`, 'SAM_AFRIKA - ACTIVATION LINK')
+          if (!ret)
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: "Something Went wrong please try again" })
+        }
 
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .send({ message: "A confirmation email was sent to your account please verify" });
 
-        const url = `${process.env.BASE_URL}users_verification/${user._id}/${token.token}`;
-        const ret = await sendMessage([user.email,], `Activate Your Account \n ${url}`, 'SAM_AFRIKA - ACTIVATION LINK')
-        if (!ret)
-          return res.status(StatusCodes.BAD_REQUEST).json({ message: "Something Went wrong please try again" })
       }
 
-      return res
-        .status(400)
-        .send({ message: "A confirmation email was sent to your account please verify" });
+      const confirmed = bcrypt.compareSync(req.body.password, user.password);
+      if (!confirmed)
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: "Wrong password" });
+      const token = JWTAuthentication.generateToken({
+        id: user._id,
+        role: user.role,
+      });
 
+      res.cookie("authentication", token, {
+        httpOnly: true,
+        maxAge: 1000 * maxAge,
+        secure: process.env.NODE_ENV === "production",
+        signed: true,
+      });
+      const {password, ...userx } = user._doc;
+      return res.status(StatusCodes.OK).json({ ...userx, token });
+    } catch (error) {
+      return res.status(StatusCodes.BAD_REQUEST).json({message:error.message})
     }
-
-    const token = JWTAuthentication.generateToken({
-      id: user._id,
-      role: user.role,
-    });
-
-    res.cookie("authentication", token, {
-      httpOnly: true,
-      maxAge: 1000 * maxAge,
-      secure: process.env.NODE_ENV === "production",
-      signed: true,
-    });
-    return res.status(StatusCodes.OK).json({ ...user, token });
-  });
+  };
 
   logout = asyncHandler((req, res) => {
     res.cookie("authentication", "", { httpOnly: true, maxAge: 1 });
     return res.status(StatusCodes.OK).json({ message: "user logged out!" });
   });
 
-  //    registration sections
+
+
   regPost = asyncHandler(async (req, res) => {
-    const { email } = req.body;
-    const existance = await User.findOne({ email });
-    if (existance) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Email already exists" });
+    try {
+      const hashedPassword = await bcrypt.hash(req.body.password, this.salt);
+      const newUser = new User({
+        ...req.body,
+        password: hashedPassword,
+      });
+      const user = await newUser.save();
+      if (!user.verified) {
+        let token = await Token.findOne({ userId: user._id });
+        if (!token) {
+          token = await new Token({
+            userId: user._id,
+            token: crypto.randomBytes(32).toString("hex"),
+          }).save();
+
+
+          const url = `${process.env.BASE_URL}users_verification/${user._id}/${token.token}`;
+          const ret = await sendMessage([user.email,], `Activate Your Account \n  follow the link below to complete your account registration \n ${url}`, 'SAM-AFRIKA - ACTIVATION LINK')
+          if (!ret)
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: "Something went wrong on sending message" })
+        }
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: "Kindly check your email for accout confirmation" })
+      }
+      res.status(StatusCodes.BAD_REQUEST).json({ message: "Kindly check your email for accout confirmation" });
+    } catch (error) {
+
+      if (error.name === 'MongoServerError' && error.code === 11000) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: `${req.body.email} already registered` })
+      } else {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: "ensure all fields are provided with exception to image" });
+      }
+
     }
-    const user = await User.create({ ...req.body });
-
-    const token = await new Token({
-      userId: user._id,
-      token: crypto.randomBytes(32).toString("hex"),
-    }).save();
-
-    const url = `${process.env.BASE_URL}/users_verification/${user._id}/${token.token}`;
-    const ret = await sendMessage([user.email,], `Activate Your Account \n ${url}`, 'SAM_AFRIKA - ACTIVATION LINK')
-    if (!ret)
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: "Something Went wrong please try again" })
-    user && res.status(StatusCodes.CREATED).json({ message: "An Email sent to your account please verify" });
   });
+
+
   confirmRegistration = asyncHandler(async (req, res) => {
     try {
       const user = await User.findOne({ _id: req.params.id });
-      if (!user) return res.status(400).send({ message: "Invalid link" });
+      if (!user) return res.status(400).json({ message: "user does not exits" });
 
       const token = await Token.findOne({
         userId: user._id,
-        token: req.params.token,
+        token: req.params.token.toString(),
       });
-      if (!token) return res.status(400).send({ message: "Invalid link" });
+      if (!token) return res.status(400).json({ message: "Reset link have expired" });
 
-      // await User.updateOne({ _id: user._id, verified: true });
       await User.updateOne({ _id: user._id }, { verified: true });
-
-      await token.remove();
-
-      res.status(200).send({ message: "Email verified successfully" });
+      // # delete the token 
+      await Token.deleteOne({ _id: token._id });
+      res.status(StatusCodes.OK).json({ message: "Email verified successfully" });
     } catch (error) {
-      res.status(500).send({ message: "Internal Server Error" });
+      res.status(StatusCodes.BAD_REQUEST).json({ message: "token not found" });
     }
   });
+
 
   // reset link sender
   reset_link = asyncHandler(async (req, res) => {
@@ -183,52 +208,53 @@ class UserRepo {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "Email field must be supplied" });
+
     try {
-      const user = await ModelActions.findOne(User, { email })
+      const user = await User.findOne({ email })
       if (!user) return res.status(StatusCodes.BAD_REQUEST).json({ message: "email not registered" })
-      const secret = process.env.JWT_SECRET + user.password;
-      const token = jwt.sign({ email: user.email, id: user._id }, secret, {
-        expiresIn: "30m",
-      });
-      const link = `${process.env.EMAIL_FRONTEND_RESET_LINK}/${user._id}/${token}`;
+
+      let token = await Token.findOne({ userId: user._id });
+      if (!token) {
+        token = await new Token({
+          userId: user._id,
+          token: crypto.randomBytes(32).toString("hex"),
+        }).save();
+      }
+
+      const link = `${process.env.EMAIL_FRONTEND_RESET_LINK}${user._id}/${token.token}`;
+      const message = "\n kindly reset your password via the link \n "
       // send message
-      const ret = sendMessage([user.email,], `Reset Password Your \n ${link}`, 'SAM_AFRIKA - RESET PASSWORD LINK');
+      const ret = sendMessage([user.email,], `Dear ${user?.fullname}, ${message} ${link}`, "SAM-AFRIKA - RESET PASSWORD LINK");
       if (!ret)
         return res.status(StatusCodes.BAD_REQUEST).json({ message: "Something Went wrong please try again" })
-      return res.status(StatusCodes.OK).json({ message: `resent link sent to ${user.email}. NOTE: password expires in 10 minute` })
+      return res.status(StatusCodes.OK).json({ message: `reset link sent to ${user.email}. NOTE: password expires in 10 minute` })
 
     } catch (error) {
-      console.log(error)
       return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message })
     }
-
-
   })
   // changeNow
-  changePassword = async (req, res) => {
-    const { id, token } = req.params;
-    const { password } = req.body;
+  changePassword = asyncHandler(async (req, res) => {
+    const oldUser = await User.findById(req.params.id);
+    if (!oldUser) return res.status(StatusCodes.BAD_REQUEST).json({ message: "User does not exist" });
 
-    const oldUser = await User.findOne({ _id: id });
-    if (!oldUser) return res.status(StatusCodes.BAD_REQUEST).json({ status: "User does not exist" });
-    const secret = process.env.JWT_SECRET + oldUser.password;
     try {
-      await jwt.verify(token, secret);
-      const salt = await bcrypt.genSalt(10);
-      const encryptedPassword = await bcrypt.hash(password, salt);
-      await User.updateOne(
-        { _id: id },
-        {
-          $set: {
-            password: encryptedPassword,
-          },
-        }
-      );
-      return res.json({ message: "Password Updated" });
+      const token_model = await Token.findOne({
+        userId: oldUser._id,
+        token: req.params.token,
+      });
+      if (!token_model) return res.status(StatusCodes.BAD_REQUEST).json({ message: "Invalid link or token have expired" });
+
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+      oldUser.password = hashedPassword;
+      await oldUser.save();
+      await Token.deleteOne({ _id: token_model._id });
+      return res.status(StatusCodes.OK).json({ message: "password reset successful" })
     } catch (error) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: "reset password link expired" });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "An error occured" });
     }
-  };
+  });
 
   changeImage = asyncHandler(async (req, res) => {
     const { image } = req.body;

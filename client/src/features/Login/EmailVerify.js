@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import "./styler.css"
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
+import { Col, Row, Container, Card, Form, Button } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { LineWave } from "react-loader-spinner";
 import {
@@ -22,7 +22,7 @@ const EmailVerify = () => {
 
   useEffect(() => {
     referal.current();
-  }, [status, message, navigate, dispatch]);
+  }, [status, isSubmit, message, navigate, dispatch]);
 
   const handleConfirm = (e) => {
     e.preventDefault();
@@ -33,6 +33,7 @@ const EmailVerify = () => {
     if (isSubmit) {
       dispatch(confirmEmail({ id, token }));
       setIsSubmit(false);
+      
     }
 
     if (status === "succeeded" || user) {
@@ -53,7 +54,7 @@ const EmailVerify = () => {
   referal.current = dispatchNewPassword;
   return (
     <div className="mb-5 mt-5 pb-5 ">
-      <Container className="mb-5 mt-5 pb-5" style={{ height: '100vh' }}>
+      <Container className="mb-5 mt-5 pb-5" style={{ height: '50vh' }}>
         <Row className=" d-flex justify-content-center align-items-center">
           <Col md={4} lg={4} xs={12}>
             <Card className="shadow">
@@ -70,7 +71,7 @@ const EmailVerify = () => {
                     {!verified ? (
                       <Form onSubmit={handleConfirm}>
                         <div className="d-grid">
-                          {status === "laoding" ? (
+                          {status === "loading" ? (
                             <LineWave
                               color={loaderColor}
                               height={loaderSize}
@@ -78,7 +79,7 @@ const EmailVerify = () => {
                             />
                           ) : (
                             <Button variant="primary" type="submit">
-                              confirm
+                            confirm
                             </Button>
                           )}
                         </div>

@@ -8,7 +8,6 @@ import Header from "./components/Header/Header";
 import MainBody from "./Screen/Main/MainBody";
 import Footer from "./components/Footer/Footer";
 import Layout from "./components/Layout";
-import RequireAuth from "./Auth/RequireAuth";
 import Login from "./features/Login/Login";
 import SignUp from "./features/SignUp/SignUp";
 import ScholarForm from "./features/Scholar/ScholarForm";

@@ -60,7 +60,6 @@ class ScholarRepo {
   };
   getScholar = async (req, res) => {
     const { userId } = req.params;
-    console.log(userId)
     checkId(res, userId);
     const scholarDoc = await Scholar.findOne({
       userId,
@@ -73,7 +72,6 @@ class ScholarRepo {
 
   getAllScholar = async (_, res) => {
     const scholarDoc = await Scholar.find().populate({ path: 'userId', select:['fullname', 'email', 'phone'], model:User}).exec();
-    console.log(scholarDoc)
     return res.status(StatusCodes.OK).json(scholarDoc);
   };
   myScholarship = asyncHandler( async (req, res) => {
@@ -89,7 +87,7 @@ class ScholarRepo {
       return res.status(StatusCodes.OK).json(data);
       // data && res.status(200).json(data);
     } catch (error) {
-      console.log(err)
+      return res.status(StatusCodes.BAD_REQUEST).json({message:error.message})
     }
   });
 }

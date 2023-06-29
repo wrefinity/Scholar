@@ -55,12 +55,12 @@ const GalleryList = () => {
                       </Tab.Pane>
                       <Tab.Pane eventKey="section">
                         <p>
-                          Welcome to SamAfrica we give the best experience that you will ever have.
+                          Welcome to SamAfrika we give the best experience that you will ever have.
                         </p>
                       </Tab.Pane>
                       <Tab.Pane eventKey="third">
                         <p>
-                        Welcome to SamAfrica we give the best experience that you will ever have.
+                        Welcome to SamAfrika we give the best experience that you will ever have.
                         </p>
                       </Tab.Pane>
                     </Tab.Content>
