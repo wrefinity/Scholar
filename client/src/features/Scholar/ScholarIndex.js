@@ -33,6 +33,9 @@ const ScholarIndex = () => {
     result: "",
     passport: "",
     signature: "",
+    confirmationLetter: "",
+    academicLevel: "",
+    programStudy: ""
   });
   const reset = () => {
     setScholar({
@@ -54,6 +57,9 @@ const ScholarIndex = () => {
       result: "",
       passport: "",
       signature: "",
+      confirmationLetter: "",
+      academicLevel: "",
+      programStudy: ""
     });
   };
 

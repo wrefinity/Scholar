@@ -17,7 +17,7 @@ const ScholarAll = () => {
         return (
           <React.Fragment key={cat?._id}>
             <tr>
-              <th colSpan="6">
+              <th colSpan="9">
                 <h5>{cat?.userId.fullname} application</h5>
               </th>
             </tr>
@@ -45,6 +45,27 @@ const ScholarAll = () => {
                     />
                   </td>
                   <td>
+                  <h5>Result</h5>
+                    <br/>
+                    <img
+                      src={sch?.result}
+                      alt=""
+                      style={{ width: "100px", height: "100px" }}
+
+                    />
+                  </td>
+                  <td>
+                  <h5>Confirmation Letter </h5>
+                    <br/>
+                    <img
+                      src={sch?.confirmationLetter}
+                      alt=""
+                      style={{ width: "100px", height: "100px" }}
+
+                    />
+                  </td>
+
+                  <td>
                   <h5>Signature</h5>
                     <br/>
                   <img
@@ -54,6 +75,7 @@ const ScholarAll = () => {
                   />
                 </td>
                   <td> <bold> [ Fullname] - </bold> {sch?.firstname} {" "} {sch?.lastname} </td>
+                  <td> <bold> [ Program of Study] - </bold> {sch?.programStudy} {" "} <br/>  [ Academic Level] -{sch?.academicLevel} </td>
                   <td> <bold> [ Location] - </bold> {sch?.city} {", "} {sch?.state} {", "} {sch?.country} </td>
         
                 </tr>

@@ -29,6 +29,9 @@ const Educational = ({
     result: "",
     scholarType: "",
     scholarLevel: "",
+    confirmationLetter: "",
+    academicLevel: "",
+    programStudy: ""
   });
 
   const checkerReset = () => {
@@ -40,6 +43,9 @@ const Educational = ({
       result: "",
       scholarType: "",
       scholarLevel: "",
+      confirmationLetter: "",
+      academicLevel: "",
+      programStudy: ""
     });
   };
 
@@ -51,38 +57,41 @@ const Educational = ({
     "result",
     "scholarType",
     "scholarLevel",
+    "confirmationLetter",
+    "academicLevel",
+    "programStudy"
   ];
 
   const categoriesOption = !categories
     ? ""
     : Array.from(categories)
-        .sort((a, b) => {
-          if (a.name < b.name) return -1;
-          if (a.name > b.name) return 1;
-          return 0;
-        })
-        .map((cat) => {
-          return (
-            <option key={cat._id} value={cat._id}>
-              {cat.name}
-            </option>
-          );
-        });
+      .sort((a, b) => {
+        if (a.name < b.name) return -1;
+        if (a.name > b.name) return 1;
+        return 0;
+      })
+      .map((cat) => {
+        return (
+          <option key={cat._id} value={cat._id}>
+            {cat.name}
+          </option>
+        );
+      });
   const TypesOption = !all_types
     ? ""
     : Array.from(all_types)
-        .sort((a, b) => {
-          if (a.name < b.name) return -1;
-          if (a.name > b.name) return 1;
-          return 0;
-        })
-        .map((cat) => {
-          return (
-            <option key={cat._id} value={cat._id}>
-              {cat.name}
-            </option>
-          );
-        });
+      .sort((a, b) => {
+        if (a.name < b.name) return -1;
+        if (a.name > b.name) return 1;
+        return 0;
+      })
+      .map((cat) => {
+        return (
+          <option key={cat._id} value={cat._id}>
+            {cat.name}
+          </option>
+        );
+      });
 
   const handleSubmited = (e) => {
     e.preventDefault();
@@ -109,7 +118,15 @@ const Educational = ({
   return (
     <div className="mb-5 mt-5 pb-5">
       <Container className="mb-5 mt-5 pb-5">
-        <Row className="d-flex justify-content-center align-items-center">
+
+
+        {submitted ? (
+          <ScholarPayment
+            scholar={scholar}
+            reset={reset}
+            reseter={reseter}
+          />
+        ) : (<Row className="d-flex justify-content-center align-items-center">
           <Col md={12} lg={12} xs={12}>
             <Card className="shadow">
               <Card.Body>
@@ -153,6 +170,50 @@ const Educational = ({
                     </Row>
 
                     <Row className="mb-3">
+                      <Form.Group
+                        as={Col}
+                        md="6"
+                        controlId="validationCustom104"
+                      >
+                        <Form.Label>Current Academic Level (example 400, 300, 200, primary 1, SS 1)</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="enter academic level"
+                          name="academicLevel"
+                          value={scholar.academicLevel}
+                          onChange={(e) => handleInput(e, setScholar)}
+                          required
+                        />
+                      </Form.Group>
+                      <Form.Group
+                        as={Col}
+                        md="6"
+                        controlId="validationCustom3303"
+                      >
+                        <Form.Label>Program of Study</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="enter program of study"
+                          name="programStudy"
+                          value={scholar.programStudy}
+                          onChange={(e) => handleInput(e, setScholar)}
+                          required
+                        />
+                      </Form.Group>
+
+                    </Row>
+
+                    <Row className="mb-3">
+                      <FileInput
+                        namer="confirmationLetter"
+                        label="Confirmation Letter (From the Head of Department or Principal)"
+                        handleInputImage={handleInputImage}
+                        setHook={setScholar}
+                        required
+                        type="image"
+                        value={scholar.confirmationLetter}
+                        formErrors
+                      />
                       <FileInput
                         namer="idCard"
                         label="Identity Card (Preferable student id-card)"
@@ -189,7 +250,7 @@ const Educational = ({
                     <Row className="mb-3">
                       <FileInput
                         namer="letter"
-                        label="Provide a evidence letter from your school (Admission letter for both undergraduate and postgraduate while a consent letter from school principal )"
+                        label="Provide an evidence current study letter (Admission letter for either undergraduate and postgraduate)"
                         handleInputImage={handleInputImage}
                         setHook={setScholar}
                         type="image"
@@ -220,19 +281,14 @@ const Educational = ({
                       Previous{" "}
                     </Button>
                     <Button onClick={handleSubmited}>Submit </Button>
-                    {submitted && (
-                      <ScholarPayment
-                        scholar={scholar}
-                        reset={reset}
-                        reseter={reseter}
-                      />
-                    )}
+
                   </div>
                 </div>
               </Card.Body>
             </Card>
           </Col>
         </Row>
+        )}
       </Container>
     </div>
   );

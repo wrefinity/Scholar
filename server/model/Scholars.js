@@ -7,11 +7,6 @@ const scholarItem = new Mongoose.Schema(
       ref: "Post",
       required: true,
     },
-    // userId: {
-    //   type: Mongoose.Schema.Types.ObjectId,
-    //   ref: "User",
-    //   required: true,
-    // },
     // personal information
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },
@@ -39,6 +34,9 @@ const scholarItem = new Mongoose.Schema(
     letter: { type: String },
     result: { type: String, rquired: true },
     passport: { type: String, required: true },
+    confirmationLetter: { type: String, required: true },
+    academicLevel: { type: String, required: true },
+    programStudy: { type: String, required: true },
     signature: { type: String, required: true },
   },
   { timestamps: true }

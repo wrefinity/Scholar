@@ -3,6 +3,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import storage from "../firebase";
 import check from "../assets/img/check.png";
 import { Form, Col, Button } from "react-bootstrap";
+
 export const FileInput = ({
   namer,
   label,
@@ -38,6 +39,12 @@ export const FileInput = ({
       }
     );
   };
+
+  const handleFileChange = (e) => {
+    const file = e.currentTarget?.files[0];
+    handleInputImage(namer, file, setHook);
+  };
+
   return (
     <Col sm="12" md="12" lg="12">
       <Form.Group className="position-relative mb-3">
@@ -47,12 +54,16 @@ export const FileInput = ({
           name="image"
           id="ccIxm"
           ref={inputRef}
-          onChange={(e) =>
-            handleInputImage(namer, e.currentTarget?.files[0], setHook)
-          }
+          onChange={handleFileChange}
           {...rest}
-          onClick={() => inputRef.current.click()}
         />
+        <Button
+          variant="primary"
+          className="d-flex bg-nav justify-content-center text-bold mt-2"
+          onClick={() => inputRef.current.click()}
+        >
+          Choose File
+        </Button>
       </Form.Group>
 
       {value !== null && !track && typeof value !== "string" && (

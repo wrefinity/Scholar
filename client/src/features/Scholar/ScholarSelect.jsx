@@ -26,7 +26,7 @@ const ScholarSelect = () => {
 
                         <Link to={`/scholars_terms/${cat?._id}`}>
                         <h6>
-                            term and conditions
+                            terms and conditions
                         </h6>
                         
                         </Link>

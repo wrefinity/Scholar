@@ -92,9 +92,9 @@ const App = () => {
             <Route
               path="/scholars_terms/:id"
               element={
-                <ProtectedAdminRoute>
-                  <ScholarTerms />
-                </ProtectedAdminRoute>
+                <ProtectedRoute>
+                <ScholarTerms />
+                </ProtectedRoute>
               }
             />
 
